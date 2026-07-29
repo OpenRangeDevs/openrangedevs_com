@@ -3,34 +3,14 @@ import SectionLabel from './SectionLabel'
 
 const faqs = [
   {
-    question: 'How senior is "senior"?',
+    question: 'Why work with OpenRangeDevs?',
     answer:
-      "Everyone who touches your project has shipped production software for 10+ years, and in most cases helped build a company. We don't bill juniors to your roadmap.",
+      'We learn how your business works before proposing a solution, challenge ideas that will not pay back, and stay involved after launch. You get clearer operations, lower costs, more room to grow, and a team that already understands the system when the next need appears.',
   },
   {
-    question: 'Do you replace our team or work with it?',
+    question: 'What business problems can you help us solve?',
     answer:
-      'Either. We can run the whole build, or embed alongside your engineers and lead. The goal is to make your team stronger — not to become a dependency.',
-  },
-  {
-    question: 'How fast can you actually start?',
-    answer:
-      'Usually within days. A senior squad can be standing up your project this week — that’s the whole point of "in days, not weeks."',
-  },
-  {
-    question: 'Is it only Ruby on Rails?',
-    answer:
-      'Rails is our home stack — 15+ years of it — and it’s how we ship fast. But we also work across modern JavaScript, Hotwire, and whatever the job genuinely needs.',
-  },
-  {
-    question: 'What does an engagement cost?',
-    answer:
-      "Most engagements start with a fixed-price Survey, then a fixed or retainer build depending on scope. You'll know the number before we start.",
-  },
-  {
-    question: 'Where are you based?',
-    answer:
-      'Calgary, Alberta — working comfortably across North American hours and overlapping European ones.',
+      'We help when work is slow, repetitive, expensive, or scattered across too many tools. That can mean replacing spreadsheets and subscriptions with one internal system, automating handoffs, improving how clients are served, or building a digital service around a real market need.',
   },
 ]
 
@@ -41,8 +21,8 @@ export default function FaqSection() {
     <section id="faq" className="border-t border-ink/12">
       <div className="mx-auto max-w-[1440px] px-6 pt-16 lg:px-14">
         <SectionLabel>Straight answers</SectionLabel>
-        <h2 className="mt-4 max-w-[756px] text-[40px] font-bold leading-none sm:text-[52px] lg:text-[64px]">
-          Questions we get a lot.
+        <h2 className="mt-4 max-w-[820px] text-[40px] font-bold leading-none sm:text-[52px] lg:text-[64px]">
+          What businesses ask us before we start.
         </h2>
       </div>
 
@@ -60,7 +40,6 @@ export default function FaqSection() {
                 <span className="text-[24px] font-bold leading-none sm:text-[32px] lg:text-[40px]">
                   {faq.question}
                 </span>
-                {/* CSS plus that rotates into an X */}
                 <span
                   aria-hidden
                   className={`relative size-6 shrink-0 transition-transform duration-300 ease-out ${
@@ -78,8 +57,8 @@ export default function FaqSection() {
               >
                 <div className="overflow-hidden">
                   <p
-                    className={`max-w-[1328px] px-6 pb-10 text-[16px] font-medium leading-[1.5] tracking-[-0.32px] transition-opacity duration-300 ${
-                      isOpen ? 'opacity-80' : 'opacity-0'
+                    className={`max-w-[1120px] px-6 pb-10 text-[17px] font-medium leading-[1.55] tracking-[-0.02em] transition-opacity duration-300 ${
+                      isOpen ? 'opacity-75' : 'opacity-0'
                     } lg:px-8`}
                   >
                     {faq.answer}

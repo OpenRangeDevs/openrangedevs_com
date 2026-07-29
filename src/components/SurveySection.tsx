@@ -1,113 +1,176 @@
-import { useEffect, useRef, useState } from 'react'
-import { prefersReducedMotion } from '../hooks/useInView'
 import { CALENDAR_URL } from '../content'
 import PillButton from './PillButton'
-import SectionLabel from './SectionLabel'
-import Testimonial from './Testimonial'
+import Reveal from './Reveal'
 
-const steps = [
+type PhaseIconProps = {
+  type: 'discover' | 'focus' | 'release' | 'improve'
+}
+
+function PhaseIcon({ type }: PhaseIconProps) {
+  const animationClass =
+    type === 'discover'
+      ? 'phase-icon-orbit'
+      : type === 'focus'
+        ? 'phase-icon-pulse'
+        : type === 'release'
+          ? 'phase-icon-nudge'
+          : 'phase-icon-cycle'
+
+  if (type === 'discover') {
+    return (
+      <svg
+        viewBox="0 0 64 64"
+        aria-hidden="true"
+        className={`size-16 ${animationClass}`}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <circle cx="32" cy="32" r="22" />
+        <path d="M32 16v32M16 32h32" />
+        <circle cx="32" cy="32" r="4" fill="currentColor" stroke="none" />
+      </svg>
+    )
+  }
+
+  if (type === 'focus') {
+    return (
+      <svg
+        viewBox="0 0 64 64"
+        aria-hidden="true"
+        className={`size-16 ${animationClass}`}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <rect x="10" y="10" width="44" height="44" />
+        <rect x="22" y="22" width="20" height="20" fill="currentColor" stroke="none" />
+      </svg>
+    )
+  }
+
+  if (type === 'release') {
+    return (
+      <svg
+        viewBox="0 0 64 64"
+        aria-hidden="true"
+        className={`size-16 ${animationClass}`}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <path d="M9 32h42M38 18l14 14-14 14" />
+        <circle cx="16" cy="32" r="6" fill="currentColor" stroke="none" />
+      </svg>
+    )
+  }
+
+  return (
+    <svg
+      viewBox="0 0 64 64"
+      aria-hidden="true"
+      className={`size-16 ${animationClass}`}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+    >
+      <circle cx="32" cy="32" r="21" />
+      <circle cx="32" cy="32" r="10" opacity="0.35" />
+      <circle cx="32" cy="11" r="5" fill="currentColor" stroke="none" />
+    </svg>
+  )
+}
+
+type Phase = {
+  label: string
+  note: string
+  description: string
+  icon: PhaseIconProps['type']
+  highlight?: string
+  cta?: string
+}
+
+const phases: Phase[] = [
   {
-    title: 'We map the terrain',
-    body: 'A short, paid discovery that returns a real plan: roadmap, architecture, scope, and price. Yours to keep — and credited toward the build if you go ahead.',
+    label: 'Discover',
+    note: 'Discovery',
+    cta: 'Schedule a discovery',
+    description:
+      'A working session to map the business problem, your need, and the most valuable opportunity to pursue.',
+    icon: 'discover',
   },
   {
-    title: 'Senior people, short cycles',
-    body: 'We build in short, visible loops. You see working software every week and talk to the people actually making it.',
+    label: 'Focus',
+    note: 'MVP',
+    description:
+      'We collaborate with you to choose the smallest feature steps that deliver value and create momentum for your business.',
+    icon: 'focus',
   },
   {
-    title: 'Live, in weeks',
-    body: 'We get it deployed, instrumented, and in front of real users — measured in weeks, not quarters.',
+    label: 'Release',
+    note: 'Early',
+    description:
+      'You put working software in front of clients early, learn from how they use it, and make each next decision with real evidence.',
+    icon: 'release',
   },
   {
-    title: 'We stay on the range',
-    body: "We stick around to scale, harden, and lead — fractional or full-tilt, for as long as it's genuinely useful.",
+    label: 'Improve',
+    note: 'Ongoing',
+    description:
+      'We remove friction and strengthen what earns adoption, leaving the business with a product that can keep evolving.',
+    icon: 'improve',
   },
 ]
 
-// focal line as a fraction of viewport height: the card crossing it is fully lit
-const FOCAL = 0.42
-const SPAN = 240 // px of distance over which a card fades from lit to dim
-const DIM = 0.5 // resting opacity of off-focus cards (kept high enough to stay white, not muddy over the green)
-const MAX_ROT = 4 // deg of tilt as a card enters/leaves focus
-
-const clamp = (x: number, lo: number, hi: number) => Math.min(Math.max(x, lo), hi)
-const clamp01 = (x: number) => clamp(x, 0, 1)
-const smoothstep = (x: number) => {
-  const c = clamp01(x)
-  return c * c * (3 - 2 * c)
-}
-
 export default function SurveySection() {
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([])
-  const [reduced] = useState(() => prefersReducedMotion())
-
-  // as the section scrolls, each card lights to full opacity as its center reaches
-  // the focal line and dims + tilts away from it — the highlight follows the scroll
-  useEffect(() => {
-    if (reduced) return
-    let rafId = 0
-    const update = () => {
-      const focal = window.innerHeight * FOCAL
-      cardRefs.current.forEach((card) => {
-        if (!card) return
-        const r = card.getBoundingClientRect()
-        const d = r.top + r.height / 2 - focal // signed distance from the focal line
-        const e = smoothstep(1 - Math.abs(d) / SPAN)
-        card.style.opacity = (DIM + (1 - DIM) * e).toFixed(3)
-        const rot = clamp(d / SPAN, -1, 1) * MAX_ROT
-        card.style.transform = `perspective(1200px) rotate(${rot.toFixed(2)}deg) scale(${(0.94 + 0.06 * e).toFixed(3)})`
-      })
-    }
-    const onScroll = () => {
-      cancelAnimationFrame(rafId)
-      rafId = requestAnimationFrame(update)
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
-    update()
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
-      cancelAnimationFrame(rafId)
-    }
-  }, [reduced])
-
   return (
-    <section id="process" className="relative overflow-hidden bg-[#2b5314]">
-      <div className="absolute bottom-0 left-6 top-0 hidden w-px hairline-white lg:block" />
-      <div className="absolute bottom-0 right-6 top-0 hidden w-px hairline-white lg:block" />
-
-      <div className="mx-auto flex max-w-[1440px] flex-col gap-14 px-6 py-20 lg:flex-row lg:justify-between lg:px-14">
-        <div className="flex max-w-[567px] flex-col items-start">
-          <SectionLabel light>What we do</SectionLabel>
-          <h2 className="mt-4 max-w-[580px] text-[40px] font-bold leading-none text-white sm:text-[52px] lg:text-[64px]">
-            Survey the ground. Then build.
+    <section id="process" className="border-t border-ink/15">
+      <div className="mx-auto max-w-[1440px] px-6 pb-14 pt-[110px] text-center lg:px-14 lg:pb-20 lg:pt-[140px]">
+        <Reveal variant="rise" delay={0.04}>
+          <h2 className="mx-auto max-w-[820px] text-[48px] font-bold leading-[0.92] tracking-[-0.055em] sm:text-[64px] lg:text-[76px]">
+            From idea to launch.
           </h2>
-          <p className="mt-8 max-w-[463px] text-[17px] font-medium leading-[1.5] tracking-[-0.4px] text-white opacity-80 lg:text-[20px]">
-            Senior people who move freely across strategy, product, and code, with nothing
+        </Reveal>
+        <Reveal variant="rise" delay={0.08}>
+          <p className="mx-auto mt-7 max-w-[660px] text-[17px] font-medium leading-[1.5] opacity-65 lg:text-[19px]">
+            Discovery sets a clear direction. One experienced team carries the work through launch and ongoing improvement.
           </p>
-          <PillButton href={CALENDAR_URL} className="mt-6">
-            Book a call
-          </PillButton>
-          <Testimonial light boxed className="mt-6 w-full" />
-        </div>
-
-        <div className="flex w-full max-w-[546px] shrink-0 flex-col gap-6" style={{ transformStyle: 'preserve-3d' }}>
-          {steps.map((step, i) => (
-            <div
-              key={step.title}
-              ref={(el) => {
-                cardRefs.current[i] = el
-              }}
-              className="flex origin-center flex-col gap-6 rounded-[20px] bg-white p-8 will-change-[opacity,transform]"
-              style={{ opacity: reduced ? (i === 0 ? 1 : 0.6) : undefined }}
-            >
-              <p className="text-[24px] font-bold leading-none">{step.title}</p>
-              <p className="text-[16px] font-medium leading-[1.5] tracking-[-0.32px] opacity-80">{step.body}</p>
-            </div>
-          ))}
-        </div>
+        </Reveal>
       </div>
+
+      <div className="mx-auto grid max-w-[1440px] border-y border-ink/20 lg:grid-cols-2">
+        {phases.map((phase, index) => (
+          <Reveal
+            key={phase.label}
+            variant="rise"
+            delay={0.04 + index * 0.05}
+            className={`p-7 sm:p-10 lg:min-h-[390px] lg:p-12 ${
+              index < phases.length - 1 ? 'border-b border-ink/20' : ''
+            } ${index % 2 === 0 ? 'lg:border-r' : ''} ${
+              index >= 2 ? 'lg:border-b-0' : ''
+            }`}
+          >
+            <div className="flex items-start justify-between">
+              <PhaseIcon type={phase.icon} />
+              <span
+                className="border border-ink/25 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em]"
+              >
+                {phase.note}
+              </span>
+            </div>
+            <h3 className="mt-14 text-[38px] font-bold leading-none tracking-[-0.045em]">
+              {phase.label}
+            </h3>
+            <p className="mt-5 max-w-[500px] text-[16px] font-medium leading-[1.55] opacity-65">{phase.description}</p>
+            {phase.cta && (
+              <PillButton href={CALENDAR_URL} size="md" className="mt-7">
+                {phase.cta}
+              </PillButton>
+            )}
+          </Reveal>
+        ))}
+      </div>
+
     </section>
   )
 }

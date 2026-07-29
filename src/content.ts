@@ -29,17 +29,76 @@ export const clientLogos: {
   { src: '/assets/client-logo-5.png', alt: 'Client logo', w: 113.5, h: 31.4 },
 ]
 
+export type CaseStudy = {
+  slug: string
+  client: string
+  project: string
+  title: string
+  body: string
+  challenge: string
+  approach: string
+  impact: string
+  className: string
+}
+
+export const caseStudies: CaseStudy[] = [
+  {
+    slug: 'student-works',
+    client: 'Student Works',
+    project: 'Platform continuity',
+    title: 'Keeping a critical platform moving.',
+    body: 'OpenRangeDevs worked through the Rails platform while API security and integration work kept progressing.',
+    challenge: 'Keep a business-critical platform moving while security and integration work evolved.',
+    approach: 'Stabilize the core platform while advancing the work that could not wait.',
+    impact: 'Important platform work kept moving without losing business continuity.',
+    className: 'lg:col-span-7 lg:min-h-[560px]',
+  },
+  {
+    slug: 'aspire',
+    client: 'Aspire',
+    project: 'Product delivery',
+    title: 'A clearer route to the next release.',
+    body: 'A focused product conversation creates a build the team can commit to.',
+    challenge: 'Turn an ambitious product direction into a release the team could confidently ship.',
+    approach: 'Align the opportunity, scope the right first move, and create a practical delivery path.',
+    impact: 'A clearer decision and a more focused route to market.',
+    className: 'lg:col-span-5 lg:min-h-[560px]',
+  },
+  {
+    slug: 'wecasa',
+    client: 'Wecasa',
+    project: 'Product focus',
+    title: 'Less surface area. More signal.',
+    body: 'The smallest credible release gives clients something real to respond to.',
+    challenge: 'Find the product work most likely to create useful client learning.',
+    approach: 'Reduce scope to the essential experience and put it in front of real clients sooner.',
+    impact: 'A smaller release designed to produce clearer decisions.',
+    className: 'lg:col-span-5 lg:min-h-[500px]',
+  },
+  {
+    slug: 'listo',
+    client: 'Listo',
+    project: 'Operational clarity',
+    title: 'The work behind the work, untangled.',
+    body: 'Clearer paths through the work let teams spend less time chasing the next handoff.',
+    challenge: 'Remove the hidden operational friction slowing important work down.',
+    approach: 'Map the flow, connect the handoffs, and make the next action obvious.',
+    impact: 'More capacity for the work that directly moves the business forward.',
+    className: 'lg:col-span-7 lg:min-h-[500px]',
+  },
+]
+
 // one testimonial per client logo (aligned by index); index 2 is the real Student Works one
 export const testimonials = [
   {
     quote:
-      '“Open Range felt less like an agency and more like a founding team that already knew how to ship. We went from a rough idea to paying customers in a single quarter.”',
+      '“Open Range felt less like an agency and more like a founding team that already knew how to ship. We went from a rough idea to paying clients in a single quarter.”',
     name: 'Dana Whitfield',
     role: 'Founder & CEO, Northwind Labs',
   },
   {
     quote:
-      "“They rebuilt the core of our platform without ever stalling the business. Senior people, honest timelines, and code we're genuinely proud to own.”",
+      "“They rebuilt the core of our platform without ever stalling the business. Clear communication, honest timelines, and code we're genuinely proud to own.”",
     name: 'Marcus Bell',
     role: 'CTO, Cedar & Pine',
   },
@@ -52,7 +111,7 @@ export const testimonials = [
   },
   {
     quote:
-      '“Every week there was working software in front of real users. No hand-offs, no ramp-up — just steady, senior momentum from day one.”',
+      '“Every week there was working software in front of real users. No hand-offs, no ramp-up — just steady momentum from day one.”',
     name: 'Elliot Vance',
     role: 'Head of Product, Bright Harbor',
   },

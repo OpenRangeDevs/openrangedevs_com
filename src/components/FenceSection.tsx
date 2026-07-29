@@ -1,126 +1,85 @@
-import { useState } from 'react'
-import { prefersReducedMotion, useInView } from '../hooks/useInView'
 import Reveal from './Reveal'
+import { testimonials } from '../content'
 import SectionLabel from './SectionLabel'
 
-const fencedWords = ['Most', 'studios', 'fence', 'you', 'in.']
-
-const fencedIn = [
-  'Junior developers learning on your budget',
-  'An account manager between you and the builders',
-  'Hand-offs, tickets, and weeks of ramp-up',
-  'Scope that quietly balloons',
-]
-
-const openRange = [
-  'Senior engineers and founders only — no training wheels',
-  'You talk directly to the people writing the code',
-  'One small outfit that ranges across the whole problem',
-  'A fixed plan, shipped in weeks',
+const principles = [
+  {
+    title: 'Right problem. Right scope.',
+    detail: 'Business before code.',
+  },
+  {
+    title: 'A process clients can trust.',
+    detail: 'We make scope, tradeoffs, and next steps visible from discovery through launch.',
+  },
+  {
+    title: 'A business asset, not another rebuild.',
+    detail: 'Build a foundation that grows revenue and adapts as the business does.',
+  },
 ]
 
 export default function FenceSection() {
-  const { ref: headingRef, inView } = useInView<HTMLHeadingElement>(0.5)
-  const [reduced] = useState(() => prefersReducedMotion())
-
-  // beat 1: words rise out of a clip while fence posts drop in between them;
-  // beat 2: posts slide away and "We don't." lands free of any clipping
-  const wordStyle = (i: number): React.CSSProperties =>
-    inView ? { animation: `word-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) ${i * 0.08}s both` } : { transform: 'translateY(120%)' }
-  const postOuterStyle: React.CSSProperties = inView ? { animation: 'post-out 0.35s ease-in 1.15s both' } : {}
-  const postInnerStyle = (i: number): React.CSSProperties =>
-    inView ? { animation: `post-in 0.35s ease-out ${0.4 + i * 0.06}s both` } : { transform: 'scaleY(0)' }
-  const freeStyle: React.CSSProperties = inView ? { animation: 'free-in 0.6s ease-out 1.35s both' } : { opacity: 0 }
-
   return (
-    <section className="mx-auto max-w-[1440px] px-6 pb-[120px] pt-[120px] lg:px-14">
-      <Reveal variant="rise">
-        <SectionLabel>Why OpenRangeDevs</SectionLabel>
-      </Reveal>
-      <h2
-        ref={headingRef}
-        aria-label="Most studios fence you in. We don't."
-        className="mt-4 flex max-w-[756px] flex-wrap gap-x-[0.3em] gap-y-[0.1em] text-[40px] font-bold leading-none sm:text-[52px] lg:text-[64px]"
-      >
-        {reduced ? (
-          <span>Most studios fence you in. We don't.</span>
-        ) : (
-          <>
-            {fencedWords.map((word, i) => (
-              <span key={word} aria-hidden className="relative">
-                <span className="-mb-[0.1em] inline-block overflow-hidden pb-[0.1em]">
-                  <span className="inline-block" style={wordStyle(i)}>
-                    {word}
-                  </span>
-                </span>
-                {/* post is centered in the word gap without taking layout space,
-                    so spacing stays uniform after the posts exit */}
-                {i < fencedWords.length - 1 && (
-                  <span className="absolute -right-[0.15em] top-1/2 inline-block -translate-y-1/2 translate-x-1/2">
-                    <span className="block" style={postOuterStyle}>
-                      <span className="block h-[0.55em] w-[3px] origin-top bg-ink/30" style={postInnerStyle(i)} />
-                    </span>
-                  </span>
-                )}
-              </span>
-            ))}
-            <span aria-hidden className="inline-block" style={freeStyle}>
-              We&nbsp;don't.
-            </span>
-          </>
-        )}
-      </h2>
-      <Reveal variant="rise-clip" delay={0.5} className="mt-6">
-        <p className="max-w-[720px] text-[17px] font-medium leading-[1.5] tracking-[-0.4px] opacity-80 lg:text-[20px]">
-          Open range means no fences — senior people who move freely across strategy, product, and code, with nothing
-          standing between you and the work.
-        </p>
-      </Reveal>
+    <section>
+      <div className="mx-auto max-w-[1440px] px-6 py-[110px] lg:px-14 lg:py-[140px]">
+        <Reveal variant="rise">
+          <SectionLabel>Why OpenRangeDevs</SectionLabel>
+        </Reveal>
 
-      <div className="mt-[70px] flex flex-col gap-9 lg:h-[506px] lg:flex-row">
-        <div className="flex w-full shrink-0 flex-col gap-6 lg:w-[461px]">
-          {/* fenced-in card: stiff, mechanical entrance */}
-          <Reveal variant="scale-in" className="flex flex-1 flex-col gap-5 overflow-clip rounded-[12px] bg-[#f5f5f5] p-6">
-            <p className="text-[14px] font-semibold uppercase leading-[1.5] tracking-[0.7px] opacity-80">
-              The fenced-in way
-            </p>
-            <ul className="flex flex-col gap-4">
-              {fencedIn.map((item, i) => (
-                <li key={item}>
-                  <Reveal variant="rise" delay={0.2 + i * 0.06} className="flex items-center gap-1">
-                    <img src="/assets/icon-x-dark.svg" alt="" className="size-6 shrink-0" />
-                    <p className="text-[16px] font-medium leading-[1.5] tracking-[-0.32px] opacity-80">{item}</p>
-                  </Reveal>
-                </li>
-              ))}
-            </ul>
+        <div className="mt-5 grid gap-8 lg:grid-cols-12 lg:items-end">
+          <Reveal variant="rise" delay={0.04} className="lg:col-span-8">
+            <h2 className="max-w-[860px] text-[48px] font-bold leading-[0.92] tracking-[-0.055em] sm:text-[64px] lg:text-[76px]">
+              Build what grows the business.
+            </h2>
           </Reveal>
-          {/* open range card: later but freer, with overshoot */}
-          <Reveal variant="free" delay={0.15} className="brand-gradient flex flex-1 flex-col gap-5 overflow-clip rounded-[12px] p-6">
-            <p className="text-[14px] font-semibold uppercase leading-[1.5] tracking-[0.7px] text-white opacity-80">
-              The open range
+          <Reveal variant="rise" delay={0.08} className="lg:col-span-4 lg:pb-1">
+            <p className="max-w-[430px] text-[18px] font-semibold leading-[1.45] tracking-[-0.025em] lg:text-[21px]">
+              We turn the right opportunities into products and operations that create revenue, unlock capacity, and compound value.
             </p>
-            <ul className="flex flex-col gap-4">
-              {openRange.map((item, i) => (
-                <li key={item}>
-                  <Reveal variant="rise" delay={0.35 + i * 0.07} className="flex items-center gap-1">
-                    <img src="/assets/icon-check-white.svg" alt="" className="size-6 shrink-0" />
-                    <p className="text-[16px] font-medium leading-[1.5] tracking-[-0.32px] text-white opacity-80">
-                      {item}
-                    </p>
-                  </Reveal>
-                </li>
-              ))}
-            </ul>
           </Reveal>
         </div>
-        <Reveal
-          variant="wipe"
-          delay={0.2}
-          className="min-h-[300px] flex-1 overflow-hidden rounded-[14px] bg-[#d9d9d9] lg:h-[503px]"
-        >
-          <img src="/assets/studio.jpg" alt="The Open Range studio at work" className="h-full w-full object-cover" />
+
+        <Reveal variant="wipe" className="relative mt-14 aspect-[16/9] min-h-[430px] overflow-hidden rounded-[20px] lg:mt-20 lg:aspect-[16/7]">
+          <img
+            src="/assets/studio.jpg"
+            alt="A collaborative product working session"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink/35 via-transparent to-transparent" />
         </Reveal>
+
+        <div className="relative grid lg:grid-cols-3">
+          <div className="pointer-events-none absolute bottom-0 left-1/2 h-px w-screen -translate-x-1/2 bg-ink/20" />
+          {principles.map((principle, index) => (
+            <Reveal
+              key={principle.title}
+              variant="rise"
+              delay={0.04 + index * 0.05}
+              className={`py-8 lg:px-8 lg:py-10 ${
+                index < principles.length - 1 ? 'border-b border-ink/20 lg:border-b-0 lg:border-r' : ''
+              }`}
+            >
+              <h3 className="text-[27px] font-bold leading-none tracking-[-0.04em]">{principle.title}</h3>
+              <p className="mt-3 text-[15px] font-medium opacity-55">{principle.detail}</p>
+            </Reveal>
+          ))}
+        </div>
+
+        <div className="grid border-b border-ink/20 lg:grid-cols-12">
+          <Reveal variant="rise" delay={0.08} className="py-8 lg:col-span-3 lg:py-10">
+            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-brand-700">Client perspective</p>
+            <p className="mt-4 max-w-[220px] text-[22px] font-bold leading-[1.05] tracking-[-0.04em]">
+              The way we work is part of the value.
+            </p>
+          </Reveal>
+          <Reveal variant="rise" delay={0.12} className="border-t border-ink/20 py-8 lg:col-span-9 lg:border-l lg:border-t-0 lg:px-8 lg:py-10">
+            <blockquote className="max-w-[850px] border-l-2 border-brand-600 pl-6">
+              <p className="text-[21px] font-medium leading-[1.42] tracking-[-0.035em] lg:text-[28px]">{testimonials[0].quote}</p>
+              <footer className="mt-5 text-[14px] font-semibold text-ink/55">
+                {testimonials[0].name} · {testimonials[0].role}
+              </footer>
+            </blockquote>
+          </Reveal>
+        </div>
       </div>
     </section>
   )

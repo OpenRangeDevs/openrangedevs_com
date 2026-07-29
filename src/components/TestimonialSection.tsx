@@ -45,7 +45,7 @@ export default function TestimonialSection() {
       </div>
 
       <div
-        className="mt-24 flex flex-wrap items-center justify-center gap-x-[100px] gap-y-10 lg:gap-x-[156px]"
+        className="mt-24 flex w-full flex-wrap items-center justify-center gap-x-8 gap-y-10 lg:justify-between lg:gap-x-0"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
@@ -58,14 +58,14 @@ export default function TestimonialSection() {
               onClick={() => setActive(i)}
               aria-label={`Show testimonial from ${testimonials[i].name}`}
               aria-pressed={isActive}
-              className={`cursor-pointer transition-opacity duration-500 ${
-                isActive ? 'opacity-100' : 'opacity-40 hover:opacity-70'
+              className={`relative cursor-pointer pb-4 transition-opacity duration-500 after:absolute after:bottom-0 after:left-0 after:h-[3px] after:w-full after:origin-left after:rounded-full after:bg-brand-600 after:transition-transform after:duration-500 ${
+                isActive ? 'opacity-100 after:scale-x-100' : 'opacity-40 after:scale-x-0 hover:opacity-70'
               }`}
             >
               <img
                 src={isActive && logo.colorSrc ? logo.colorSrc : logo.src}
                 alt={logo.alt}
-                style={{ width: logo.w * 1.16, height: logo.h * 1.16 }}
+                style={{ width: (logo.w / logo.h) * 40, height: 40 }}
               />
             </button>
           )

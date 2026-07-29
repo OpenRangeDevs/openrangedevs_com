@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { CALENDAR_URL, navLinks } from '../content'
+import { navLinks } from '../content'
 import PillButton from './PillButton'
 import { prefersReducedMotion } from '../hooks/useInView'
 
@@ -18,7 +18,11 @@ const smoothstep = (x: number) => {
   return c * c * (3 - 2 * c)
 }
 
-export default function Navbar() {
+type NavbarProps = {
+  elevated?: boolean
+}
+
+export default function Navbar({ elevated = false }: NavbarProps) {
   const headerRef = useRef<HTMLElement>(null)
   const navRef = useRef<HTMLDivElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -45,7 +49,8 @@ export default function Navbar() {
 
       header.style.maxWidth = `${lerp(NARROW, WIDE, pAnim)}px`
       header.style.top = `${lerp(49, 12, pAnim)}px`
-      nav.style.boxShadow = `0 8px 30px rgba(0,0,0,${(0.12 * pAnim).toFixed(3)})`
+      const shadowAlpha = elevated ? lerp(0.11, 0.16, pAnim) : 0.12 * pAnim
+      nav.style.boxShadow = `0 12px 38px rgba(5,16,35,${shadowAlpha.toFixed(3)})`
       // grow the pill's inner padding on desktop so the logo/button ride out to the
       // section content edges (56px) as it widens; leave the class padding on mobile
       if (window.innerWidth >= 1024) {
@@ -59,14 +64,19 @@ export default function Navbar() {
     }
     rafId = requestAnimationFrame(loop)
     return () => cancelAnimationFrame(rafId)
-  }, [])
+  }, [elevated])
 
   return (
     <header
       ref={headerRef}
       className="fixed left-1/2 top-[49px] z-50 w-[calc(100%-48px)] max-w-[1080px] -translate-x-1/2"
     >
-      <nav ref={navRef} className="flex h-[64px] items-center justify-between rounded-[20px] bg-white px-4 lg:px-6">
+      <nav
+        ref={navRef}
+        className={`flex h-[64px] items-center justify-between rounded-[20px] bg-white px-4 lg:px-6 ${
+          elevated ? 'border border-ink/10 ring-1 ring-white/80' : ''
+        }`}
+      >
         <a href="#" className="flex min-w-0 items-center gap-[6.5px]">
           <img src="/assets/logo-mark.svg" alt="" className="h-[32px] w-[39.8px] shrink-0 lg:h-[40px] lg:w-[49.8px]" />
           <span className="truncate font-logo text-[18px] font-bold tracking-[-0.86px] text-ink lg:text-[21.5px]">
@@ -86,7 +96,7 @@ export default function Navbar() {
         </div>
 
         <div className="hidden lg:block">
-          <PillButton size="md" href={CALENDAR_URL}>
+          <PillButton size="md" href="#contact">
             Contact Us
           </PillButton>
         </div>
@@ -135,7 +145,7 @@ export default function Navbar() {
             </a>
           ))}
         </div>
-        <PillButton size="md" href={CALENDAR_URL} className="mt-2 w-full" onClick={() => setMenuOpen(false)}>
+        <PillButton size="md" href="#contact" className="mt-2 w-full" onClick={() => setMenuOpen(false)}>
           Contact Us
         </PillButton>
       </div>

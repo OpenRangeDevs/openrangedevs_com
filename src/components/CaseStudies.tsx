@@ -1,170 +1,44 @@
-import { useEffect, useState } from 'react'
-import { prefersReducedMotion, useInView } from '../hooks/useInView'
 import Reveal from './Reveal'
-
-type CaseStudy = {
-  name: string
-  description: string
-  bg: string
-  stats: { value: string; label: string }[]
-}
-
-const caseStudies: CaseStudy[] = [
-  {
-    name: 'Aspire',
-    description: "Inherited a Rails app that's stalling? We stabilize it, clear the debt.",
-    bg: 'bg-[#155b75]',
-    stats: [
-      { value: '+240%', label: 'Growth over lead’s' },
-      { value: '+240%', label: 'Growth over lead’s' },
-    ],
-  },
-  {
-    name: 'Aspire',
-    description: "Inherited a Rails app that's stalling? We stabilize it, clear the debt.",
-    bg: 'bg-[#1849a9]',
-    stats: [
-      { value: '+240%', label: 'Growth over lead’s' },
-      { value: '+240%', label: 'Growth over lead’s' },
-    ],
-  },
-  {
-    name: 'Aspire',
-    description: "Inherited a Rails app that's stalling? We stabilize it, clear the debt.",
-    bg: 'bg-[#4a1fb8]',
-    stats: [
-      { value: '+240%', label: 'Growth over lead’s' },
-      { value: '+240%', label: 'Growth over lead’s' },
-    ],
-  },
-  {
-    name: 'Aspire',
-    description: "Inherited a Rails app that's stalling? We stabilize it, clear the debt.",
-    bg: 'bg-[#000309]',
-    stats: [
-      { value: '+240%', label: 'Growth over lead’s' },
-      { value: '+240%', label: 'Growth over lead’s' },
-    ],
-  },
-]
-
-const EASE_OUT = 'cubic-bezier(0.22, 1, 0.36, 1)'
-
-const NUM_RE = /^(\D*)(\d[\d,]*)(.*)$/
-const DURATION = 1.9 // seconds — slow enough to read as a smooth climb
-// ease-in-out so the count eases in gently and settles softly, instead of the
-// front-loaded easeOut that blasted most of the way in the first few frames
-const easeInOutCubic = (p: number) => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2)
-
-// counts the numeric part of a value (e.g. "+240%") up from zero when `run` flips true
-function CountUp({ value, run, delay = 0 }: { value: string; run: boolean; delay?: number }) {
-  const match = value.match(NUM_RE)
-  const prefix = match?.[1] ?? ''
-  const target = match ? Number(match[2].replace(/,/g, '')) : 0
-  const suffix = match?.[3] ?? ''
-  const [reduced] = useState(() => prefersReducedMotion())
-  const [n, setN] = useState(reduced ? target : 0)
-
-  // deps are primitives only — including the fresh `match` array would restart
-  // (and stall) the animation on every setN re-render
-  useEffect(() => {
-    if (!run || reduced || target === 0) return
-    let raf = 0
-    let start = 0
-    const tick = (t: number) => {
-      if (!start) start = t
-      const p = (t - start) / 1000 - delay
-      if (p >= 0) {
-        const e = easeInOutCubic(Math.min(p / DURATION, 1))
-        setN(Math.round(target * e))
-        if (p >= DURATION) return
-      }
-      raf = requestAnimationFrame(tick)
-    }
-    raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
-  }, [run, reduced, target, delay])
-
-  if (!match) return <>{value}</>
-  return (
-    <>
-      {prefix}
-      {n.toLocaleString()}
-      {suffix}
-    </>
-  )
-}
-
-// slight overshoot so the mockup "pops" as it settles at the bottom of the card
-const POP_EASE = 'cubic-bezier(0.34, 1.28, 0.64, 1)'
+import { caseStudies, type CaseStudy } from '../content'
 
 function CaseStudyCard({ study, index }: { study: CaseStudy; index: number }) {
-  const { ref, inView } = useInView<HTMLDivElement>(0.25)
-  const [reduced] = useState(() => prefersReducedMotion())
-  const on = inView || reduced
-  // the two cards in a row lead in one after the other, so a row doesn't burst at once
-  const base = (index % 2) * 0.18
-
-  // staggered entrance driven by a single observer per card
-  const anim = (keyframe: string, delay: number, duration = 0.55, ease = EASE_OUT): React.CSSProperties => {
-    if (reduced) return {}
-    return inView
-      ? { animation: `${keyframe} ${duration}s ${ease} ${base + delay}s both` }
-      : { opacity: 0 }
-  }
-
   return (
-    <article
-      ref={ref}
-      className={`flex min-w-0 flex-1 flex-col gap-4 overflow-hidden rounded-[20px] border border-[#d5d7da] px-6 pt-6 text-white ${study.bg} lg:h-[480px]`}
+    <a
+      href={`#case-studies/${study.slug}`}
+      aria-label={`Read the ${study.client} case study`}
+      className={`case-study-card group relative flex min-w-0 flex-col overflow-hidden rounded-[20px] border border-ink/15 bg-white p-7 transition-colors hover:border-brand-600/60 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-600 sm:p-9 lg:p-10 ${study.className}`}
     >
-      <div className="flex flex-col gap-3">
-        <h3 className="text-[40px] font-bold leading-none lg:text-[56px]" style={anim('rise', 0.05)}>
-          {study.name}
-        </h3>
-        <p
-          className="text-[17px] font-medium leading-[1.5] tracking-[-0.4px] opacity-80 lg:text-[20px]"
-          style={anim('rise', 0.18)}
-        >
-          {study.description}
-        </p>
+      <div className="relative z-10 flex items-start justify-between gap-5">
+        <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-ink/50">{study.project}</p>
+        <span className="text-[11px] font-bold tabular-nums text-ink/35">0{index + 1}</span>
       </div>
-      <div className="flex items-center gap-5 lg:gap-10">
-        {study.stats.map((stat, i) => (
-          <div key={i} className="flex items-center gap-5 lg:gap-10">
-            {i > 0 && <div className="h-[66px] w-[3px] bg-white" style={anim('rise', 0.32 + i * 0.12)} />}
-            <div className="flex w-[130px] flex-col gap-0.5 leading-[1.5] lg:w-[156px]" style={anim('rise', 0.34 + i * 0.12)}>
-              <p className="text-[32px] font-medium tracking-[-0.8px] tabular-nums lg:text-[40px]">
-                <CountUp value={stat.value} run={on} delay={base + 0.5 + i * 0.12} />
-              </p>
-              <p className="text-[16px] font-medium tracking-[-0.36px] opacity-80 lg:text-[18px]">{stat.label}</p>
-            </div>
-          </div>
-        ))}
+      <div className="relative z-10 mt-12 max-w-[380px]">
+        <p className="text-[13px] font-bold uppercase tracking-[0.13em] text-brand-700">{study.client}</p>
+        <h3 className="mt-3 text-[38px] font-bold leading-[0.96] tracking-[-0.05em] sm:text-[46px]">{study.title}</h3>
+        <p className="mt-5 text-[16px] font-medium leading-[1.55] text-ink/65">{study.body}</p>
       </div>
-      <div
-        className="h-[240px] w-full shrink-0 rounded-[15px] bg-white lg:h-[323px] lg:w-[610px] lg:max-w-none"
-        style={anim('pop-up', 0.62, 0.7, POP_EASE)}
-      />
-    </article>
+      <p className="relative z-10 mt-8 text-[13px] font-bold uppercase tracking-[0.14em] text-brand-700">Read case study ↗</p>
+      <div aria-label={`${study.client} client preview placeholder`} className="case-client-preview mt-12 -mb-7 -mx-7 transition-colors group-hover:bg-brand-600/20 sm:-mb-9 sm:-mx-9 lg:-mb-10 lg:-mx-10" />
+    </a>
   )
 }
 
 export default function CaseStudies() {
   return (
-    <section id="case-studies" className="mx-auto max-w-[1440px] px-6 pt-[120px] lg:px-14">
-      <Reveal variant="rise">
-        <h2 className="text-center text-[40px] font-bold leading-none sm:text-[52px] lg:text-[64px]">Case Studies</h2>
-      </Reveal>
-      <div className="mt-14 flex flex-col gap-10">
-        <div className="flex flex-col gap-4 lg:flex-row">
-          <CaseStudyCard study={caseStudies[0]} index={0} />
-          <CaseStudyCard study={caseStudies[1]} index={1} />
-        </div>
-        <div className="flex flex-col gap-4 lg:flex-row">
-          <CaseStudyCard study={caseStudies[2]} index={2} />
-          <CaseStudyCard study={caseStudies[3]} index={3} />
-        </div>
+    <section id="case-studies" className="border-t border-ink/15">
+      <div className="mx-auto max-w-[1440px] px-6 pb-14 pt-[110px] lg:px-14 lg:pb-20 lg:pt-[140px]">
+        <Reveal variant="rise">
+          <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-ink/45">Case studies</p>
+          <h2 className="mt-5 max-w-[780px] text-[48px] font-bold leading-[0.93] tracking-[-0.055em] sm:text-[64px] lg:text-[76px]">
+            Work that holds up in the real world.
+          </h2>
+        </Reveal>
+      </div>
+
+      <div className="mx-auto grid max-w-[1440px] gap-4 px-6 pb-6 lg:grid-cols-12 lg:px-14 lg:pb-14">
+        {caseStudies.map((study, index) => (
+          <CaseStudyCard key={study.client} study={study} index={index} />
+        ))}
       </div>
     </section>
   )
