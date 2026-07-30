@@ -9,6 +9,9 @@ RUN corepack enable
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
+ARG WEB3FORM_ACCESS_KEY
+ENV WEB3FORM_ACCESS_KEY=$WEB3FORM_ACCESS_KEY
+
 COPY . .
 RUN pnpm build
 

@@ -9,6 +9,8 @@ dist
 dist-ssr
 *.local
 *.log
+.env
+.env.*
 
 .kamal
 config/deploy*.yml

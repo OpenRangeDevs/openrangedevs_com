@@ -39,6 +39,8 @@ builder:
   arch: amd64
   remote: ssh://root@167.172.124.249
   context: .
+  args:
+    WEB3FORM_ACCESS_KEY: <%= ENV.fetch("WEB3FORM_ACCESS_KEY") %>
 
 aliases:
   shell: app exec --interactive --reuse "sh"

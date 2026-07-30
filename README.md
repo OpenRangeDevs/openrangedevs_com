@@ -27,13 +27,13 @@ pnpm lint       # run oxlint
 - `src/hooks/` — shared hooks (e.g. `useInView`)
 - `public/assets/` — images, logos, and SVG marks
 
-All "Book a call" / "Contact Us" CTAs link to the scheduling calendar defined by `CALENDAR_URL` in `src/content.ts`.
+"Book a call" CTAs use `CALENDAR_URL` in `src/content.ts`. The contact page submits via Web3Forms (`WEB3FORM_ACCESS_KEY` in `.env`).
 
 ## Deploy (Kamal)
 
 Production runs on the shared ORD Kamal droplet via `kamal-proxy`.
 
-1. Copy `.env.example` → `.env` and set `KAMAL_REGISTRY_PASSWORD` (DO API token with registry access).
+1. Copy `.env.example` → `.env` and set `KAMAL_REGISTRY_PASSWORD` plus `WEB3FORM_ACCESS_KEY`.
 2. Deploy:
 
 ```bash

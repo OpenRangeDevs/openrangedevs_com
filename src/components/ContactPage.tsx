@@ -1,4 +1,4 @@
-import type { FormEvent } from 'react'
+import { useState, type FormEvent } from 'react'
 import Footer from './Footer'
 import Navbar from './Navbar'
 
@@ -8,20 +8,67 @@ const contactPrompts = [
   'A system that needs to grow with you',
 ]
 
-export default function ContactPage() {
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    const name = String(data.get('name') ?? '')
-    const email = String(data.get('email') ?? '')
-    const company = String(data.get('company') ?? '')
-    const message = String(data.get('message') ?? '')
-    const subject = encodeURIComponent(`OpenRangeDevs enquiry from ${name || company || 'a new client'}`)
-    const body = encodeURIComponent(
-      [`Name: ${name}`, `Email: ${email}`, `Company: ${company}`, '', message].join('\n'),
-    )
+const WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit'
+const ACCESS_KEY = import.meta.env.WEB3FORM_ACCESS_KEY as string | undefined
 
-    window.location.href = `mailto:hello@openrangedevs.com?subject=${subject}&body=${body}`
+type FormStatus = 'idle' | 'sending' | 'success' | 'error'
+
+export default function ContactPage() {
+  const [status, setStatus] = useState<FormStatus>('idle')
+  const [errorMessage, setErrorMessage] = useState('')
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    if (!ACCESS_KEY) {
+      setStatus('error')
+      setErrorMessage('Contact form is not configured. Email us instead.')
+      return
+    }
+
+    const form = event.currentTarget
+    const data = new FormData(form)
+    const name = String(data.get('name') ?? '')
+    const company = String(data.get('company') ?? '')
+
+    if (data.get('botcheck')) {
+      setStatus('success')
+      form.reset()
+      return
+    }
+
+    data.append('access_key', ACCESS_KEY)
+    data.append(
+      'subject',
+      `OpenRangeDevs enquiry from ${name || company || 'a new client'}`,
+    )
+    data.append('from_name', 'OpenRangeDevs Contact')
+
+    setStatus('sending')
+    setErrorMessage('')
+
+    try {
+      const response = await fetch(WEB3FORMS_ENDPOINT, {
+        method: 'POST',
+        body: data,
+      })
+      const result = (await response.json()) as {
+        success?: boolean
+        message?: string
+      }
+
+      if (!result.success) {
+        setStatus('error')
+        setErrorMessage(result.message || 'Something went wrong. Try again.')
+        return
+      }
+
+      setStatus('success')
+      form.reset()
+    } catch {
+      setStatus('error')
+      setErrorMessage('Network error. Check your connection and try again.')
+    }
   }
 
   return (
@@ -95,39 +142,74 @@ export default function ContactPage() {
                 </h2>
               </div>
 
-              <form onSubmit={handleSubmit} className="mt-12 grid flex-1 content-start gap-x-7 sm:grid-cols-2">
-                <label className="contact-field">
-                  <span>Name</span>
-                  <input type="text" name="name" autoComplete="name" required />
-                </label>
-                <label className="contact-field">
-                  <span>Email</span>
-                  <input type="email" name="email" autoComplete="email" required />
-                </label>
-                <label className="contact-field sm:col-span-2">
-                  <span>Company Name</span>
-                  <input type="text" name="company" autoComplete="organization" required />
-                </label>
-                <label className="contact-field sm:col-span-2">
-                  <span>Message</span>
-                  <textarea name="message" rows={5} required />
-                </label>
-
-                <div className="mt-9 flex flex-col gap-5 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
+              {status === 'success' ? (
+                <div className="mt-12 flex flex-1 flex-col justify-center gap-6" role="status">
+                  <p className="max-w-[480px] text-[28px] font-bold leading-[1.1] tracking-[-0.04em]">
+                    Message sent. We will get back to you soon.
+                  </p>
                   <button
-                    type="submit"
-                    className="inline-flex min-h-14 cursor-pointer items-center justify-center rounded-[19px] bg-ink px-9 text-[17px] font-semibold text-white transition-transform hover:scale-[1.02] active:scale-[0.98]"
+                    type="button"
+                    onClick={() => setStatus('idle')}
+                    className="inline-flex min-h-14 w-fit cursor-pointer items-center justify-center rounded-[19px] bg-ink px-9 text-[17px] font-semibold text-white transition-transform hover:scale-[1.02] active:scale-[0.98]"
                   >
-                    Submit
+                    Send another message
                   </button>
-                  <a
-                    href="mailto:hello@openrangedevs.com"
-                    className="text-[14px] font-semibold text-ink/55 transition-colors hover:text-brand-700"
-                  >
-                    hello@openrangedevs.com
-                  </a>
                 </div>
-              </form>
+              ) : (
+                <form
+                  onSubmit={handleSubmit}
+                  className="mt-12 grid flex-1 content-start gap-x-7 sm:grid-cols-2"
+                >
+                  <input
+                    type="checkbox"
+                    name="botcheck"
+                    className="hidden"
+                    style={{ display: 'none' }}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                  />
+
+                  <label className="contact-field">
+                    <span>Name</span>
+                    <input type="text" name="name" autoComplete="name" required />
+                  </label>
+                  <label className="contact-field">
+                    <span>Email</span>
+                    <input type="email" name="email" autoComplete="email" required />
+                  </label>
+                  <label className="contact-field sm:col-span-2">
+                    <span>Company Name</span>
+                    <input type="text" name="company" autoComplete="organization" required />
+                  </label>
+                  <label className="contact-field sm:col-span-2">
+                    <span>Message</span>
+                    <textarea name="message" rows={5} required />
+                  </label>
+
+                  {status === 'error' && errorMessage ? (
+                    <p className="mt-4 text-[14px] font-semibold text-red-600 sm:col-span-2" role="alert">
+                      {errorMessage}
+                    </p>
+                  ) : null}
+
+                  <div className="mt-9 flex flex-col gap-5 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
+                    <button
+                      type="submit"
+                      disabled={status === 'sending'}
+                      className="inline-flex min-h-14 cursor-pointer items-center justify-center rounded-[19px] bg-ink px-9 text-[17px] font-semibold text-white transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:cursor-wait disabled:opacity-60"
+                    >
+                      {status === 'sending' ? 'Sending…' : 'Submit'}
+                    </button>
+                    <a
+                      href="mailto:hello@openrangedevs.com"
+                      className="text-[14px] font-semibold text-ink/55 transition-colors hover:text-brand-700"
+                    >
+                      hello@openrangedevs.com
+                    </a>
+                  </div>
+                </form>
+              )}
             </div>
           </div>
         </section>
