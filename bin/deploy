@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Deploy via Kamal using registry credentials from .env.
+# Avoids Docker Desktop credsStore 405 errors when the local daemon is down.
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT"
+
+"$ROOT/bin/docker-registry-config"
+export DOCKER_CONFIG="$ROOT/.docker-kamal"
+
+exec kamal deploy "$@"

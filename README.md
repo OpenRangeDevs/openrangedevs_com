@@ -28,3 +28,19 @@ pnpm lint       # run oxlint
 - `public/assets/` — images, logos, and SVG marks
 
 All "Book a call" / "Contact Us" CTAs link to the scheduling calendar defined by `CALENDAR_URL` in `src/content.ts`.
+
+## Deploy (Kamal)
+
+Production runs on the shared ORD Kamal droplet via `kamal-proxy`.
+
+1. Copy `.env.example` → `.env` and set `KAMAL_REGISTRY_PASSWORD` (DO API token with registry access).
+2. Deploy:
+
+```bash
+bin/deploy
+```
+
+Use `bin/deploy` instead of bare `kamal deploy` when Docker Desktop is not running. Buildx pushes from the remote builder and needs local registry credentials to share; Desktop’s `credsStore` returns a DOCR `405` if the daemon is down.
+
+`Cannot connect to the Docker daemon` during deploy is expected if Desktop is stopped — the image still builds on `ord-kamal-builder-1`.
+
