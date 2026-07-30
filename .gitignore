@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local env / secrets (never commit tokens)
+.env
+.env.*
+!.env.example
+.kamal/secrets-common
