@@ -2,7 +2,7 @@ import { navLinks } from '../content'
 
 const contacts = [
   { icon: '/assets/icon-mail.svg', label: 'hello@openrangedevs.com' },
-  { icon: '/assets/icon-call.svg', label: '995 - 222 - 444' },
+  { icon: '/assets/icon-call.svg', label: '+15873287001' },
   { icon: '/assets/icon-location.svg', label: '225 First Avenue NW, Airdrie, Alberta T4B 2M8' },
 ]
 
@@ -51,7 +51,7 @@ export default function Footer() {
                 alt=""
                 className="h-[46px] w-[57px] shrink-0 sm:h-[58px] sm:w-[72px]"
               />
-              <span className="truncate font-logo text-[clamp(34px,5vw,72px)] font-bold leading-none tracking-[-0.05em] text-brand-700">
+              <span className="inline-block whitespace-nowrap py-[0.12em] font-logo text-[clamp(34px,5vw,72px)] font-bold leading-[1.08] tracking-[-0.05em] text-brand-700">
                 OpenRangeDevs
               </span>
             </a>

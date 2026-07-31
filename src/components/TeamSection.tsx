@@ -12,12 +12,12 @@ type Member = {
 
 const members: Member[] = [
   { name: 'Roger Kondrat', role: 'Founder', bio: 'Roger keeps the business, product, and delivery decisions connected from the first conversation through launch.', image: '/assets/team/roger.webp?v=20260729' },
-  { name: 'Arnоld Roа', role: 'CTO', bio: 'With over 20 years of experience in the industry, Arnоld brings leadership and technical direction to complex builds, balancing durable systems with useful momentum.', image: '/assets/team/arnold.webp?v=20260729-2' },
-  { name: 'Ehab Fayez', role: 'Product Designer', bio: 'Ehab turns business context into product experiences that are clear, useful, and ready for real clients.', image: '/assets/team/ehab.webp?v=20260729-2' },
+  { name: 'Arnold Roa', role: 'CTO', bio: 'With over 20 years of experience in the industry, Arnold brings leadership and technical direction to complex builds, balancing durable systems with useful momentum.', image: '/assets/team/arnold.webp?v=20260729-2' },
+  { name: 'Maria Duarte', role: 'Operations Manager - Recruitment Specialist', bio: 'Maria helps grow the OpenRangeDevs team with people who care about the business outcome as much as the build.', image: '/assets/team/maria.webp?v=20260729' },
   { name: 'Genesis Anosike', role: 'Product Designer', bio: 'Genesis shapes thoughtful product interfaces and helps teams turn product intent into a coherent experience.', image: '/assets/team/genesis.webp?v=20260729' },
+  { name: 'Ehab Fayez', role: 'Product Designer', bio: 'Ehab turns business context into product experiences that are clear, useful, and ready for real clients.', image: '/assets/team/ehab.webp?v=20260729-2' },
   { name: 'Mahmoud Bakr', role: 'Software Engineer', bio: 'Mahmoud builds reliable product foundations and keeps the details of delivery moving in the right direction.', image: '/assets/team/mahmoud.webp?v=20260729' },
   { name: 'Nnah Godspower', role: 'Software Engineer', bio: 'Nnah brings steady engineering craft to the work, from practical implementation through continual improvement.', image: '/assets/team/nnah.webp?v=20260729' },
-  { name: 'Maria Duarte', role: 'Operations Manager - Recruitment Specialist', bio: 'Maria helps grow the OpenRangeDevs team with people who care about the business outcome as much as the build.', image: '/assets/team/maria.webp?v=20260729' },
 ]
 
 const EASE_OUT = 'cubic-bezier(0.22, 1, 0.36, 1)'
@@ -117,21 +117,40 @@ export default function TeamSection() {
           </p>
         </Reveal>
 
-        <div ref={ref} className="mt-16 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4 lg:gap-8">
-          {members.map((member, i) => (
-            <MemberCard
-              key={i}
-              member={member}
-              onSelect={() => setSelectedMember(member)}
-              style={
-                reduced
-                  ? undefined
-                  : show
-                    ? { animation: `pop-up 0.6s ${EASE_OUT} ${i * 0.07}s both` }
-                    : { opacity: 0 }
-              }
-            />
-          ))}
+        <div ref={ref} className="mt-16">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 lg:gap-8">
+            {members.slice(0, 3).map((member, i) => (
+              <MemberCard
+                key={member.name}
+                member={member}
+                onSelect={() => setSelectedMember(member)}
+                style={
+                  reduced
+                    ? undefined
+                    : show
+                      ? { animation: `pop-up 0.6s ${EASE_OUT} ${i * 0.07}s both` }
+                      : { opacity: 0 }
+                }
+              />
+            ))}
+          </div>
+
+          <div className="mt-5 grid grid-cols-2 gap-5 sm:mt-8 sm:grid-cols-4 lg:gap-8">
+            {members.slice(3).map((member, i) => (
+              <MemberCard
+                key={member.name}
+                member={member}
+                onSelect={() => setSelectedMember(member)}
+                style={
+                  reduced
+                    ? undefined
+                    : show
+                      ? { animation: `pop-up 0.6s ${EASE_OUT} ${(i + 3) * 0.07}s both` }
+                      : { opacity: 0 }
+                }
+              />
+            ))}
+          </div>
         </div>
       </div>
 
