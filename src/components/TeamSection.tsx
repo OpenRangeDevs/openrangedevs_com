@@ -13,11 +13,11 @@ type Member = {
 const members: Member[] = [
   { name: 'Roger Kondrat', role: 'Founder', bio: 'Roger keeps the business, product, and delivery decisions connected from the first conversation through launch.', image: '/assets/team/roger.webp?v=20260729' },
   { name: 'Arnоld Roа', role: 'CTO', bio: 'With over 20 years of experience in the industry, Arnоld brings leadership and technical direction to complex builds, balancing durable systems with useful momentum.', image: '/assets/team/arnold.webp?v=20260729-2' },
-  { name: 'Ehab Fayez', role: 'UX/UI Designer - Product Designer', bio: 'Ehab turns business context into product experiences that are clear, useful, and ready for real clients.', image: '/assets/team/ehab.webp?v=20260729-2' },
-  { name: 'Genesis Anosike', role: 'UX/UI Designer - Product Designer', bio: 'Genesis shapes thoughtful product interfaces and helps teams turn product intent into a coherent experience.', image: '/assets/team/genesis.webp?v=20260729' },
-  { name: 'Mahmoud Bakr', role: 'Developer', bio: 'Mahmoud builds reliable product foundations and keeps the details of delivery moving in the right direction.', image: '/assets/team/mahmoud.webp?v=20260729' },
-  { name: 'Nnah Godspower', role: 'Developer', bio: 'Nnah brings steady engineering craft to the work, from practical implementation through continual improvement.', image: '/assets/team/nnah.webp?v=20260729' },
-  { name: 'Maria Duarte', role: 'Recruitment Specialist', bio: 'Maria helps grow the OpenRangeDevs team with people who care about the business outcome as much as the build.', image: '/assets/team/maria.webp?v=20260729' },
+  { name: 'Ehab Fayez', role: 'Product Designer', bio: 'Ehab turns business context into product experiences that are clear, useful, and ready for real clients.', image: '/assets/team/ehab.webp?v=20260729-2' },
+  { name: 'Genesis Anosike', role: 'Product Designer', bio: 'Genesis shapes thoughtful product interfaces and helps teams turn product intent into a coherent experience.', image: '/assets/team/genesis.webp?v=20260729' },
+  { name: 'Mahmoud Bakr', role: 'Software Engineer', bio: 'Mahmoud builds reliable product foundations and keeps the details of delivery moving in the right direction.', image: '/assets/team/mahmoud.webp?v=20260729' },
+  { name: 'Nnah Godspower', role: 'Software Engineer', bio: 'Nnah brings steady engineering craft to the work, from practical implementation through continual improvement.', image: '/assets/team/nnah.webp?v=20260729' },
+  { name: 'Maria Duarte', role: 'Operations Manager - Recruitment Specialist', bio: 'Maria helps grow the OpenRangeDevs team with people who care about the business outcome as much as the build.', image: '/assets/team/maria.webp?v=20260729' },
 ]
 
 const EASE_OUT = 'cubic-bezier(0.22, 1, 0.36, 1)'

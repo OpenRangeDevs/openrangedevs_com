@@ -1,75 +1,33 @@
-import { useEffect, useState } from 'react'
-import { clientLogos, testimonials } from '../content'
-import { prefersReducedMotion } from '../hooks/useInView'
+import { testimonial } from '../content'
 import SectionLabel from './SectionLabel'
 
-const ROTATE_MS = 6000
-
 export default function TestimonialSection() {
-  const [active, setActive] = useState(0)
-  const [reduced] = useState(() => prefersReducedMotion())
-  const [paused, setPaused] = useState(false)
-
-  // auto-rotate through the testimonials; pause on hover, skip under reduced motion
-  useEffect(() => {
-    if (reduced || paused) return
-    const id = window.setInterval(() => setActive((a) => (a + 1) % testimonials.length), ROTATE_MS)
-    return () => window.clearInterval(id)
-  }, [reduced, paused])
-
-  const t = testimonials[active]
-
   return (
     <section className="mx-auto max-w-[1440px] px-6 pb-[120px] pt-[120px] lg:px-14">
-      <SectionLabel>In their words</SectionLabel>
-      <h2 className="mt-4 max-w-[756px] text-[40px] font-bold leading-none sm:text-[52px] lg:text-[64px]">
-        Founders who've ridden with us.
-      </h2>
-
-      <div className="mt-8 flex min-h-[200px] max-w-[1021px] flex-col">
-        {/* re-keyed on change so each testimonial fades + rises in */}
-        <div
-          key={active}
-          className="flex flex-col gap-4"
-          style={reduced ? undefined : { animation: 'rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both' }}
-        >
-          <p className="text-[22px] italic leading-[1.5] tracking-[-0.59px] lg:text-[29.6px]">{t.quote}</p>
-          <div className="flex items-center gap-2">
-            <div className="size-16 shrink-0 rounded-[12px] bg-[#d9d9d9]" />
-            <div className="flex flex-col justify-center">
-              <p className="text-[20px] font-medium leading-[1.5] tracking-[-0.48px] lg:text-[24px]">{t.name}</p>
-              <p className="text-[16px] leading-[1.5] tracking-[-0.36px] opacity-60 lg:text-[18.2px]">{t.role}</p>
-            </div>
+      <div className="grid overflow-hidden rounded-[28px] border border-ink/15 bg-white lg:grid-cols-[0.72fr_1.28fr]">
+        <div className="flex flex-col justify-between border-b border-ink/15 p-8 lg:border-b-0 lg:border-r lg:p-12">
+          <div>
+            <SectionLabel>Client proof</SectionLabel>
+            <h2 className="mt-5 max-w-[430px] text-[38px] font-bold leading-[0.96] tracking-[-0.05em] sm:text-[48px]">
+              Trusted with work that cannot stand still.
+            </h2>
           </div>
+          <img
+            src="/assets/client-logo-3-color.svg"
+            alt="Student Works"
+            className="mt-12 h-10 w-auto self-start object-contain"
+          />
         </div>
-      </div>
 
-      <div
-        className="mt-24 flex w-full flex-wrap items-center justify-center gap-x-8 gap-y-10 lg:justify-between lg:gap-x-0"
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-      >
-        {clientLogos.map((logo, i) => {
-          const isActive = i === active
-          return (
-            <button
-              key={logo.src}
-              type="button"
-              onClick={() => setActive(i)}
-              aria-label={`Show testimonial from ${testimonials[i].name}`}
-              aria-pressed={isActive}
-              className={`relative cursor-pointer pb-4 transition-opacity duration-500 after:absolute after:bottom-0 after:left-0 after:h-[3px] after:w-full after:origin-left after:rounded-full after:bg-brand-600 after:transition-transform after:duration-500 ${
-                isActive ? 'opacity-100 after:scale-x-100' : 'opacity-40 after:scale-x-0 hover:opacity-70'
-              }`}
-            >
-              <img
-                src={isActive && logo.colorSrc ? logo.colorSrc : logo.src}
-                alt={logo.alt}
-                style={{ width: (logo.w / logo.h) * 40, height: 40 }}
-              />
-            </button>
-          )
-        })}
+        <blockquote className="flex flex-col justify-between bg-[#edf3ff] p-8 lg:p-12">
+          <p className="text-[22px] font-medium leading-[1.42] tracking-[-0.035em] sm:text-[28px] lg:text-[34px]">
+            {testimonial.quote}
+          </p>
+          <footer className="mt-10 border-t border-ink/20 pt-5">
+            <p className="text-[18px] font-bold">{testimonial.name}</p>
+            <p className="mt-1 text-[15px] text-ink/60">{testimonial.role}</p>
+          </footer>
+        </blockquote>
       </div>
     </section>
   )

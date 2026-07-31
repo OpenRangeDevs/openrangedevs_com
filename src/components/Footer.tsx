@@ -3,7 +3,7 @@ import { navLinks } from '../content'
 const contacts = [
   { icon: '/assets/icon-mail.svg', label: 'hello@openrangedevs.com' },
   { icon: '/assets/icon-call.svg', label: '995 - 222 - 444' },
-  { icon: '/assets/icon-location.svg', label: '3997 Dunning Road, Ontario' },
+  { icon: '/assets/icon-location.svg', label: '225 First Avenue NW, Airdrie, Alberta T4B 2M8' },
 ]
 
 export default function Footer() {
@@ -24,7 +24,7 @@ export default function Footer() {
           </div>
 
           <nav aria-label="Footer navigation">
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
               {navLinks.map((link) => (
                 <a
                   key={link.label}

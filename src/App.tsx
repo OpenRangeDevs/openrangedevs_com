@@ -5,10 +5,8 @@ import ClientLogos from './components/ClientLogos'
 import FenceSection from './components/FenceSection'
 import ServicesSection from './components/ServicesSection'
 import SurveySection from './components/SurveySection'
-import CaseStudies from './components/CaseStudies'
 import CtaBanner from './components/CtaBanner'
 import TeamSection from './components/TeamSection'
-import TestimonialSection from './components/TestimonialSection'
 import FaqSection from './components/FaqSection'
 import Footer from './components/Footer'
 import CaseStudyPage from './components/CaseStudyPage'
@@ -60,7 +58,6 @@ export default function App() {
         <FenceSection />
         <SurveySection />
         <ServicesSection />
-        <CaseStudies />
         <div className="pt-20">
           <CtaBanner
             title="Start with discovery."
@@ -73,7 +70,6 @@ export default function App() {
         <div className="pt-[120px]">
           <TeamSection />
         </div>
-        <TestimonialSection />
         <FaqSection />
         <div className="py-[120px]">
           <CtaBanner

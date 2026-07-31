@@ -175,10 +175,10 @@ export default function CaseStudyPage({ slug }: CaseStudyPageProps) {
 
       <section className="mx-auto max-w-[1440px] px-6 pb-16 pt-36 lg:px-14 lg:pb-24 lg:pt-48">
         <a
-          href="#case-studies"
+          href="#"
           className="inline-flex text-[13px] font-bold underline decoration-brand-600 underline-offset-4 transition-opacity hover:opacity-60"
         >
-          ← Back to case studies
+          ← Back to home
         </a>
 
         <div className="mt-8 rounded-[28px] bg-[#e8f0ff] p-6 sm:p-10 lg:p-14">

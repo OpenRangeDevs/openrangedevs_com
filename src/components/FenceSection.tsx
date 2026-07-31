@@ -1,5 +1,5 @@
 import Reveal from './Reveal'
-import { testimonials } from '../content'
+import { testimonial } from '../content'
 import SectionLabel from './SectionLabel'
 
 const principles = [
@@ -73,9 +73,9 @@ export default function FenceSection() {
           </Reveal>
           <Reveal variant="rise" delay={0.12} className="border-t border-ink/20 py-8 lg:col-span-9 lg:border-l lg:border-t-0 lg:px-8 lg:py-10">
             <blockquote className="max-w-[850px] border-l-2 border-brand-600 pl-6">
-              <p className="text-[21px] font-medium leading-[1.42] tracking-[-0.035em] lg:text-[28px]">{testimonials[0].quote}</p>
+              <p className="text-[21px] font-medium leading-[1.42] tracking-[-0.035em] lg:text-[28px]">{testimonial.quote}</p>
               <footer className="mt-5 text-[14px] font-semibold text-ink/55">
-                {testimonials[0].name} · {testimonials[0].role}
+                {testimonial.name} · {testimonial.role}
               </footer>
             </blockquote>
           </Reveal>

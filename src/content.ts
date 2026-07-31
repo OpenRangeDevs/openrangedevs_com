@@ -10,7 +10,6 @@ export const testimonial = {
 
 export const navLinks = [
   { label: 'Service', href: '#services' },
-  { label: 'Case Studies', href: '#case-studies' },
   { label: 'Process', href: '#process' },
   { label: 'FAQ', href: '#faq' },
 ]
@@ -85,34 +84,5 @@ export const caseStudies: CaseStudy[] = [
     approach: 'Map the flow, connect the handoffs, and make the next action obvious.',
     impact: 'More capacity for the work that directly moves the business forward.',
     className: 'lg:col-span-7 lg:min-h-[500px]',
-  },
-]
-
-// one testimonial per client logo (aligned by index); index 2 is the real Student Works one
-export const testimonials = [
-  {
-    quote:
-      '“Open Range felt less like an agency and more like a founding team that already knew how to ship. We went from a rough idea to paying clients in a single quarter.”',
-    name: 'Dana Whitfield',
-    role: 'Founder & CEO, Northwind Labs',
-  },
-  {
-    quote:
-      "“They rebuilt the core of our platform without ever stalling the business. Clear communication, honest timelines, and code we're genuinely proud to own.”",
-    name: 'Marcus Bell',
-    role: 'CTO, Cedar & Pine',
-  },
-  testimonial,
-  {
-    quote:
-      '“What surprised me most was the candor. They told us what not to build, which probably saved us six months and a small fortune.”',
-    name: 'Priya Raman',
-    role: 'Co-founder, Loomstack',
-  },
-  {
-    quote:
-      '“Every week there was working software in front of real users. No hand-offs, no ramp-up — just steady momentum from day one.”',
-    name: 'Elliot Vance',
-    role: 'Head of Product, Bright Harbor',
   },
 ]

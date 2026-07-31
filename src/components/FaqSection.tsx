@@ -12,6 +12,11 @@ const faqs = [
     answer:
       'We help when work is slow, repetitive, expensive, or scattered across too many tools. That can mean replacing spreadsheets and subscriptions with one internal system, automating handoffs, improving how clients are served, or building a digital service around a real market need.',
   },
+  {
+    question: 'Where are you based?',
+    answer:
+      'Our head office is in Canada, with a team that works across the Americas and globally. We collaborate comfortably across North American hours and overlap with Western Europe, too.',
+  },
 ]
 
 export default function FaqSection() {
