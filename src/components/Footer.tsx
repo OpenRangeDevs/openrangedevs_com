@@ -3,7 +3,11 @@ import { navLinks } from '../content'
 const contacts = [
   { icon: '/assets/icon-mail.svg', label: 'hello@openrangedevs.com' },
   { icon: '/assets/icon-call.svg', label: '+15873287001' },
-  { icon: '/assets/icon-location.svg', label: '225 First Avenue NW, Airdrie, Alberta T4B 2M8' },
+  {
+    icon: '/assets/icon-location.svg',
+    label: '225 First Avenue NW, Airdrie,',
+    secondaryLabel: 'Alberta T4B 2M8',
+  },
 ]
 
 export default function Footer() {
@@ -17,7 +21,12 @@ export default function Footer() {
               {contacts.map((contact) => (
                 <li key={contact.label} className="flex items-center gap-3">
                   <img src={contact.icon} alt="" className="size-5 shrink-0" />
-                  <p className="text-[15px] font-semibold leading-none">{contact.label}</p>
+                  <p className="text-[15px] font-semibold leading-[1.3]">
+                    {contact.label}
+                    {contact.secondaryLabel && (
+                      <span className="block whitespace-nowrap">{contact.secondaryLabel}</span>
+                    )}
+                  </p>
                 </li>
               ))}
             </ul>

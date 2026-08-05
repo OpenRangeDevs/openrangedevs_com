@@ -1448,7 +1448,8 @@
 }
 
 .service-visual-stage--partner {
-  --partner-orbit-radius: 245px;
+  --partner-ring-radius: 195px;
+  --partner-node-gap: 26px;
   min-height: 520px;
 }
 
@@ -1461,7 +1462,10 @@
   transform: translate(-50%, -50%);
 }
 
-.partner-simple-ring--outer { width: 390px; height: 390px; }
+.partner-simple-ring--outer {
+  width: calc(var(--partner-ring-radius) * 2);
+  height: calc(var(--partner-ring-radius) * 2);
+}
 .partner-simple-ring--inner { width: 250px; height: 250px; border-style: dashed; }
 
 .partner-simple-core {
@@ -1499,25 +1503,33 @@
 
 .partner-simple-node {
   position: absolute;
+  display: grid;
+  width: 92px;
+  min-height: 40px;
+  place-items: center;
   border: 1px solid rgb(255 255 255 / 0.34);
   background: #061a3f;
-  padding: 11px 15px;
+  padding: 9px 10px;
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.14em;
+  line-height: 1;
+  text-align: center;
   text-transform: uppercase;
 }
 
 .partner-simple-node--maintain {
-  left: calc(50% - var(--partner-orbit-radius));
+  right: calc(50% + var(--partner-ring-radius) + var(--partner-node-gap));
+  left: auto;
   top: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateY(-50%);
 }
 
 .partner-simple-node--improve {
+  bottom: calc(50% + var(--partner-ring-radius) + var(--partner-node-gap));
   left: 50%;
-  top: calc(50% - var(--partner-orbit-radius));
-  transform: translate(-50%, -50%);
+  top: auto;
+  transform: translateX(-50%);
 }
 
 .contact-blueprint {
@@ -1617,10 +1629,9 @@
   }
 }
 .partner-simple-node--grow {
-  right: auto;
-  left: calc(50% + var(--partner-orbit-radius));
+  left: calc(50% + var(--partner-ring-radius) + var(--partner-node-gap));
   top: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateY(-50%);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -1698,16 +1709,18 @@
 
 @media (max-width: 620px) {
   .service-visual-stage { min-height: 420px; margin-inline: 16px; }
-  .service-visual-stage--partner { --partner-orbit-radius: 165px; }
+  .service-visual-stage--partner {
+    --partner-ring-radius: 130px;
+    --partner-node-gap: 10px;
+  }
   .service-visual-core { width: 150px; min-height: 128px; }
   .service-visual-tag { min-width: 68px; font-size: 9px; }
   .growth-bars { inset-inline: 5%; }
   .growth-outcome { right: 2%; }
   .growth-outcome strong { max-width: 140px; font-size: 16px; }
-  .partner-simple-ring--outer { width: 300px; height: 300px; }
   .partner-simple-ring--inner { width: 200px; height: 200px; }
   .partner-simple-core { width: 142px; height: 142px; }
-  .partner-simple-node { padding: 8px 9px; font-size: 8px; }
+  .partner-simple-node { width: 70px; min-height: 34px; padding: 7px 6px; font-size: 8px; }
 }
 
 .case-client-preview {
