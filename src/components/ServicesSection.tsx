@@ -1,5 +1,4 @@
-import { CALENDAR_URL } from '../content'
-import { prefersReducedMotion, useInView } from '../hooks/useInView'
+import { CALENDAR_URL } from '../data/site'
 import ArtworkMotion from './ArtworkMotion'
 import PillButton from './PillButton'
 import Reveal from './Reveal'
@@ -43,15 +42,15 @@ const services: Service[] = [
   },
 ]
 
+// site.ts adds service-graphic--active once 42% of the frame is in view
+// (skipped for reduced motion), which starts the CSS animations.
 function GraphicFrame({ children, visual }: { children: React.ReactNode; visual: Visual }) {
-  const { ref, inView } = useInView<HTMLDivElement>(0.42)
-  const active = inView && !prefersReducedMotion()
-
   return (
     <div
-      ref={ref}
       aria-hidden="true"
-      className={`service-graphic service-graphic--${visual} ${active ? 'service-graphic--active' : ''}`}
+      data-inview-class="service-graphic--active"
+      data-threshold="0.42"
+      className={`service-graphic service-graphic--${visual}`}
     >
       {children}
     </div>

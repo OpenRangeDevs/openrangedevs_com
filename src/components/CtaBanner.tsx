@@ -1,4 +1,4 @@
-import { CALENDAR_URL } from '../content'
+import { CALENDAR_URL } from '../data/site'
 import ArtworkMotion from './ArtworkMotion'
 import PillButton from './PillButton'
 

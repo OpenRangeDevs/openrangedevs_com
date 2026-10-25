@@ -1,4 +1,4 @@
-import { clientLogos } from '../content'
+import { clientLogos } from '../data/site'
 
 export default function ClientLogos() {
   return (

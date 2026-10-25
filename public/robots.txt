@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://openrangedevs.com/sitemap-index.xml

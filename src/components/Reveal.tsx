@@ -1,6 +1,3 @@
-import { useState } from 'react'
-import { prefersReducedMotion, useInView } from '../hooks/useInView'
-
 type Variant = 'rise' | 'rise-clip' | 'scale-in' | 'free' | 'wipe'
 
 type RevealProps = {
@@ -22,35 +19,34 @@ const VARIANTS: Record<Variant, { keyframe: string; duration: number; ease: stri
   wipe: { keyframe: 'wipe-in', duration: 1.1, ease: EASE_OUT },
 }
 
+/**
+ * Renders plain HTML; src/scripts/site.ts animates it when it scrolls into view.
+ * The element with `data-reveal` is observed; it and any descendant `data-anim`
+ * nodes get their animation applied. `data-hide` sets the pre-reveal state
+ * (only while JS is running — see global.css — so content is never lost).
+ */
 export default function Reveal({ children, variant = 'rise', delay = 0, duration, className = '' }: RevealProps) {
-  const { ref, inView } = useInView<HTMLDivElement>()
-  const [reduced] = useState(() => prefersReducedMotion())
-
-  if (reduced) {
-    return <div className={className}>{children}</div>
-  }
-
   const { keyframe, duration: defaultDuration, ease } = VARIANTS[variant]
-  const animation = `${keyframe} ${duration ?? defaultDuration}s ${ease} ${delay}s both`
+  const total = duration ?? defaultDuration
+  const animation = `${keyframe} ${total}s ${ease} ${delay}s both`
 
   if (variant === 'rise-clip') {
     return (
-      <div ref={ref} className={`overflow-hidden ${className}`}>
-        <div style={inView ? { animation } : { transform: 'translateY(120%)' }}>{children}</div>
+      <div data-reveal className={`overflow-hidden ${className}`}>
+        <div data-anim={animation} data-hide="translate">
+          {children}
+        </div>
       </div>
     )
   }
 
   if (variant === 'wipe') {
-    // the clip lives on an inner wrapper: a fully clipped element reports zero
+    // observe the unclipped outer node: a fully clipped element reports zero
     // intersection area in Chromium, so observing the clipped node never fires
     return (
-      <div ref={ref} className={className}>
-        <div className="h-full w-full" style={inView ? { animation } : { clipPath: 'inset(0 100% 0 0)' }}>
-          <div
-            className="h-full w-full"
-            style={inView ? { animation: `settle ${(duration ?? defaultDuration) + 0.3}s ${EASE_OUT} ${delay}s both` } : undefined}
-          >
+      <div data-reveal className={className}>
+        <div className="h-full w-full" data-anim={animation} data-hide="clip">
+          <div className="h-full w-full" data-anim={`settle ${total + 0.3}s ${EASE_OUT} ${delay}s both`}>
             {children}
           </div>
         </div>
@@ -59,7 +55,7 @@ export default function Reveal({ children, variant = 'rise', delay = 0, duration
   }
 
   return (
-    <div ref={ref} className={className} style={inView ? { animation } : { opacity: 0 }}>
+    <div data-reveal data-anim={animation} data-hide="opacity" className={className}>
       {children}
     </div>
   )

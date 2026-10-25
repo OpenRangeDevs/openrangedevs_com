@@ -1,46 +1,64 @@
 # openrangedevs_com
 
-Marketing site for OpenRangeDevs — a single-page marketing site built with Vite, React, TypeScript, and Tailwind CSS, with scroll-driven animations powered by Lenis.
+Marketing site for OpenRangeDevs, built with **Astro** and hosted on **Netlify**.
+Every page is prerendered to static HTML (crawlable, fast, no client framework
+shipped); React components are used only as templates at build time.
 
 ## Stack
 
-- **Vite** + **React 19** + **TypeScript**
+- **Astro 7** (static output) + React components for markup
 - **Tailwind CSS v4**
-- **Lenis** for smooth scrolling
-- **Playwright** for E2E testing
-- **oxlint** for linting
+- **Lenis** smooth scrolling, scroll reveals and interactions in `src/scripts/site.ts` (~22 KB JS)
+- **Netlify Forms** for the contact form
+- **@astrojs/sitemap**, per-page meta / Open Graph / JSON-LD in `src/layouts/BaseLayout.astro`
 
 ## Getting started
 
 ```bash
 pnpm install
-pnpm dev        # start the dev server (http://localhost:5173)
-pnpm build      # type-check and build for production
-pnpm preview    # preview the production build
-pnpm lint       # run oxlint
+pnpm dev        # http://localhost:4321
+pnpm build      # astro check + static build to dist/
+pnpm preview    # serve dist/
+pnpm lint       # oxlint
 ```
+
+Requires Node ≥ 22.23.4.
 
 ## Structure
 
-- `src/components/` — section components (Hero, Services, Survey, Case Studies, Team, Testimonials, FAQ, Footer, …)
-- `src/content.ts` — shared copy, client logos, testimonials, and the booking calendar URL
-- `src/hooks/` — shared hooks (e.g. `useInView`)
-- `public/assets/` — images, logos, and SVG marks
+| Path | What lives there |
+| --- | --- |
+| `src/pages/` | Routes: `/`, `/contact/`, `/contact/thanks/`, `/case-studies/[slug]/`, `/insights/[slug]/`, `404` |
+| `src/components/` | Section components (rendered to static HTML) |
+| `src/content/case-studies/*.md` | One file per case study (frontmatter only) |
+| `src/content/insights/*.md` | Articles — add a file to publish `/insights/<file-name>/` |
+| `src/data/site.ts` | Business details, nav, testimonial, booking calendar URL |
+| `src/scripts/` | Client behaviour (`site.ts`) and contact form enhancement |
+| `public/` | Images, `_headers`, `robots.txt`, `og-image.jpg` |
 
-"Book a call" CTAs use `CALENDAR_URL` in `src/content.ts`. The contact page submits via Web3Forms (`WEB3FORM_ACCESS_KEY` in `.env`).
+### Publishing content
 
-## Deploy (Kamal)
+Case studies and articles have a `published` flag. With `published: false` the
+page is still built (and linkable) but carries `noindex` and is left out of the
+sitemap. Set `published: true` once the content is approved.
 
-Production runs on the shared ORD Kamal droplet via `kamal-proxy`.
+### Contact form
 
-1. Copy `.env.example` → `.env` and set `KAMAL_REGISTRY_PASSWORD` plus `WEB3FORM_ACCESS_KEY`.
-2. Deploy:
+The form in `src/pages/contact/index.astro` is plain HTML with `data-netlify="true"`,
+so Netlify detects it at deploy time. Field names must stay in sync with
+`src/scripts/contact-form.ts`. Spam protection is a honeypot (`bot-field`) plus
+Netlify's built-in Akismet filtering.
 
-```bash
-bin/deploy
-```
+Old hash URLs (`/#contact`, `/#case-studies/<slug>`) are redirected client-side
+from the home page.
 
-Use `bin/deploy` instead of bare `kamal deploy` when Docker Desktop is not running. Buildx pushes from the remote builder and needs local registry credentials to share; Desktop’s `credsStore` returns a DOCR `405` if the daemon is down.
+## Deploy (Netlify)
 
-`Cannot connect to the Docker daemon` during deploy is expected if Desktop is stopped — the image still builds on `ord-kamal-builder-1`.
+Build settings live in `netlify.toml`; pushes to `main` deploy production and
+pull requests get deploy previews. No environment variables are required.
 
+One-time setup in the Netlify UI:
+
+1. **Forms → Enable form detection**, then redeploy.
+2. **Project configuration → Notifications → Form submission notifications** → email.
+3. **Domain management** → add `openrangedevs.com` (primary) and `www.openrangedevs.com`.
