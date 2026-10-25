@@ -34,7 +34,9 @@ if (form && success && errorEl) {
       form.reset()
       form.hidden = true
       success.hidden = false
-      success.focus()
+      // the form collapses, so bring the confirmation into view below the fixed navbar
+      success.focus({ preventScroll: true })
+      success.scrollIntoView({ block: 'start', behavior: 'smooth' })
     } catch {
       showError(`Something went wrong sending your message. Try again, or email us at hello@openrangedevs.com.`)
     } finally {

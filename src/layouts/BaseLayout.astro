@@ -59,8 +59,7 @@ const jsonLd = [organization, ...schema]
     <script is:inline>document.documentElement.classList.add('js')</script>
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex, follow" />}
+    {noindex ? <meta name="robots" content="noindex, follow" /> : <link rel="canonical" href={canonical} />}
 
     <meta property="og:type" content={type} />
     <meta property="og:site_name" content={SITE.name} />

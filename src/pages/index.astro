@@ -36,10 +36,15 @@ const schema = [
        Hash fragments never reach the server, so this is the only place to redirect them. -->
   <script is:inline slot="head">
     ;(function () {
-      var h = location.hash
-      if (h === '#contact') location.replace('/contact/')
-      var m = h.match(/^#case-studies\/([\w-]+)$/)
-      if (m) location.replace('/case-studies/' + m[1] + '/')
+      function go() {
+        var h = location.hash
+        if (h === '#contact') return location.replace('/contact/')
+        var m = h.match(/^#case-studies\/([\w-]+)$/)
+        if (m) location.replace('/case-studies/' + m[1] + '/')
+      }
+      go()
+      // also catch an old link followed while already on this page
+      addEventListener('hashchange', go)
     })()
   </script>
 
