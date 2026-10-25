@@ -1739,3 +1739,50 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ------------------------------------------------------------------------ */
+/* Astro port: state that used to live in React now lives in data attributes */
+/* ------------------------------------------------------------------------ */
+
+/* Pre-reveal states apply only once JS is confirmed running (html.js is set
+   inline in <head>), so content is always visible to crawlers and no-JS users. */
+html.js [data-hide='opacity'] { opacity: 0; }
+html.js [data-hide='translate'] { transform: translateY(120%); }
+html.js [data-hide='clip'] { clip-path: inset(0 100% 0 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  html.js [data-hide] { opacity: 1; transform: none; clip-path: none; }
+  .motion-only { display: none; }
+}
+
+/* Navbar mobile menu */
+.nav-menu { pointer-events: none; opacity: 0; transform: translateY(-0.5rem) scale(0.95); }
+[data-nav-header][data-open] .nav-menu { pointer-events: auto; opacity: 1; transform: none; }
+.nav-bar-top { transform: translateY(-6px); }
+.nav-bar-bottom { transform: translateY(6px); }
+[data-nav-header][data-open] .nav-bar-top { transform: rotate(45deg); }
+[data-nav-header][data-open] .nav-bar-mid { opacity: 0; }
+[data-nav-header][data-open] .nav-bar-bottom { transform: rotate(-45deg); }
+
+/* FAQ accordion */
+.faq-panel { grid-template-rows: 0fr; }
+.faq-answer { opacity: 0; }
+.faq-item[data-open='true'] .faq-panel { grid-template-rows: 1fr; }
+.faq-item[data-open='true'] .faq-answer { opacity: 0.75; }
+.faq-item[data-open='true'] .faq-icon { transform: rotate(135deg); }
+
+/* Team profile dialogs */
+.team-dialog { margin: auto; border: 0; }
+.team-dialog::backdrop { background: rgb(0 3 9 / 0.7); backdrop-filter: blur(4px); }
+
+/* Long-form article body (insights) */
+.prose-ord { font-size: 19px; line-height: 1.65; color: rgb(0 3 9 / 0.78); }
+.prose-ord > * + * { margin-top: 1.2em; }
+.prose-ord h2 { margin-top: 2em; font-size: 36px; line-height: 1; font-weight: 700; letter-spacing: -0.045em; color: var(--color-ink); }
+.prose-ord h3 { margin-top: 1.6em; font-size: 26px; line-height: 1.1; font-weight: 700; letter-spacing: -0.03em; color: var(--color-ink); }
+.prose-ord a { color: var(--color-brand-700); text-decoration: underline; text-underline-offset: 3px; }
+.prose-ord ul { list-style: disc; padding-left: 1.3em; }
+.prose-ord ol { list-style: decimal; padding-left: 1.3em; }
+.prose-ord li + li { margin-top: 0.4em; }
+.prose-ord blockquote { border-left: 2px solid var(--color-brand-600); padding-left: 1.2em; font-weight: 500; }
+.prose-ord strong { color: var(--color-ink); }

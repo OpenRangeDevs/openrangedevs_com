@@ -1,8 +1,8 @@
-import { navLinks } from '../content'
+import { navLinks, sectionHref } from '../data/site'
 
-const contacts = [
-  { icon: '/assets/icon-mail.svg', label: 'hello@openrangedevs.com' },
-  { icon: '/assets/icon-call.svg', label: '+15873287001' },
+const contacts: { icon: string; label: string; href?: string; secondaryLabel?: string }[] = [
+  { icon: '/assets/icon-mail.svg', label: 'hello@openrangedevs.com', href: 'mailto:hello@openrangedevs.com' },
+  { icon: '/assets/icon-call.svg', label: '+15873287001', href: 'tel:+15873287001' },
   {
     icon: '/assets/icon-location.svg',
     label: '225 First Avenue NW, Airdrie,',
@@ -10,7 +10,7 @@ const contacts = [
   },
 ]
 
-export default function Footer() {
+export default function Footer({ onHome = false }: { onHome?: boolean }) {
   return (
     <footer className="relative border-t border-ink/12 bg-white">
       <div className="mx-auto max-w-[1440px] px-6 py-14 lg:px-14 lg:py-20">
@@ -22,7 +22,13 @@ export default function Footer() {
                 <li key={contact.label} className="flex items-center gap-3">
                   <img src={contact.icon} alt="" className="size-5 shrink-0" />
                   <p className="text-[15px] font-semibold leading-[1.3]">
-                    {contact.label}
+                    {contact.href ? (
+                      <a href={contact.href} className="transition-colors hover:text-brand-700">
+                        {contact.label}
+                      </a>
+                    ) : (
+                      contact.label
+                    )}
                     {contact.secondaryLabel && (
                       <span className="block whitespace-nowrap">{contact.secondaryLabel}</span>
                     )}
@@ -37,7 +43,7 @@ export default function Footer() {
               {navLinks.map((link) => (
                 <a
                   key={link.label}
-                  href={link.href}
+                  href={sectionHref(link.href, onHome)}
                   className="group flex items-center justify-between border-b border-ink/12 pb-4 text-[24px] font-semibold tracking-[-0.04em] transition-colors hover:text-brand-700 lg:text-[28px]"
                 >
                   <span>{link.label}</span>
@@ -51,7 +57,7 @@ export default function Footer() {
             </div>
 
             <a
-              href="#"
+              href="/"
               aria-label="OpenRangeDevs home"
               className="mt-9 inline-flex max-w-full items-center gap-3 lg:mt-11"
             >

@@ -29,3 +29,7 @@ dist-ssr
 !.env.example
 .kamal/secrets-common
 .docker-kamal
+
+# Astro / Netlify
+.astro
+.netlify

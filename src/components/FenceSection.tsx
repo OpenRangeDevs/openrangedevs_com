@@ -1,5 +1,5 @@
 import Reveal from './Reveal'
-import { testimonial } from '../content'
+import { testimonial } from '../data/site'
 import SectionLabel from './SectionLabel'
 
 const principles = [

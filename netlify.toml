@@ -1,0 +1,14 @@
+[build]
+  command = "pnpm build"
+  publish = "dist"
+
+[build.environment]
+  # Astro 7 requires Node >= 22.23.4
+  NODE_VERSION = "22"
+
+# www → apex (Netlify's primary-domain setting does this too; this makes it explicit)
+[[redirects]]
+  from = "https://www.openrangedevs.com/*"
+  to = "https://openrangedevs.com/:splat"
+  status = 301
+  force = true

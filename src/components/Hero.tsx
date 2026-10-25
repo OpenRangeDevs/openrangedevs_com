@@ -1,45 +1,18 @@
-import { useEffect, useRef } from 'react'
-import { CALENDAR_URL } from '../content'
+import { CALENDAR_URL } from '../data/site'
 import Navbar from './Navbar'
 import PillButton from './PillButton'
 import RulerTicks from './RulerTicks'
 
 export default function Hero() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const cardRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    let rafId = 0
-    const update = () => {
-      // 0 → 1 over the first 240px of scroll: full-bleed hero tucks into the inset rounded card
-      const p = Math.min(Math.max(window.scrollY / 240, 0), 1)
-      if (sectionRef.current) {
-        const pad = 16 * p
-        sectionRef.current.style.padding = `${pad}px ${pad}px 0`
-      }
-      if (cardRef.current) {
-        cardRef.current.style.borderRadius = `${37 * p}px`
-      }
-    }
-    const onScroll = () => {
-      cancelAnimationFrame(rafId)
-      rafId = requestAnimationFrame(update)
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    update()
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      cancelAnimationFrame(rafId)
-    }
-  }, [])
-
   return (
-    <section ref={sectionRef} className="relative">
-      <Navbar />
-      <div ref={cardRef} className="relative h-[864px] overflow-hidden lg:h-[716px]">
+    // site.ts: over the first 240px of scroll the full-bleed hero tucks into an inset rounded card
+    <section data-hero className="relative">
+      <Navbar onHome />
+      <div data-hero-card className="relative h-[864px] overflow-hidden lg:h-[716px]">
         <img
           src="/assets/hero-clouds.jpg"
           alt=""
+          fetchPriority="high"
           className="absolute inset-0 h-full w-full object-cover object-top"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 from-[14%] to-white/0 to-[115%]" />

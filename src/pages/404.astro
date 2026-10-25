@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
+import PillButton from '../components/PillButton'
+---
+
+<BaseLayout title="Page not found" noindex>
+  <div class="page-rails relative min-h-screen overflow-x-clip bg-white">
+    <Navbar elevated />
+    <main class="relative z-10 px-6 pb-28 pt-40 lg:px-14 lg:pb-40 lg:pt-52">
+      <section class="mx-auto max-w-[1328px]">
+        <p class="text-[12px] font-bold uppercase tracking-[0.18em] text-brand-700">404</p>
+        <h1 class="mt-5 max-w-[900px] text-[clamp(52px,7vw,104px)] font-bold leading-[0.88] tracking-[-0.07em]">
+          This trail doesn't go anywhere.
+        </h1>
+        <PillButton href="/" className="mt-12">Back to home</PillButton>
+      </section>
+    </main>
+    <Footer />
+  </div>
+</BaseLayout>

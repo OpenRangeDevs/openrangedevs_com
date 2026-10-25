@@ -1,0 +1,162 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import Navbar from '../../components/Navbar'
+import Footer from '../../components/Footer'
+import { SITE } from '../../data/site'
+
+const contactPrompts = [
+  'A workflow costing too much time',
+  'A product opportunity worth testing',
+  'A system that needs to grow with you',
+]
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    name: 'Contact OpenRangeDevs',
+    url: `${SITE.url}/contact/`,
+    about: { '@id': `${SITE.url}/#organization` },
+  },
+]
+---
+
+<BaseLayout
+  title="Contact"
+  description="Tell OpenRangeDevs what you are trying to improve, build, or untangle. We start with the business need and map the strongest next step."
+  schema={schema}
+>
+  <div class="page-rails relative min-h-screen overflow-x-clip bg-white">
+    <Navbar elevated />
+    <main id="contact" class="relative z-10 px-6 pb-28 pt-40 lg:px-14 lg:pb-40 lg:pt-52">
+      <section class="mx-auto max-w-[1328px]">
+        <p class="text-[12px] font-bold uppercase tracking-[0.18em] text-brand-700">Contact OpenRangeDevs</p>
+        <div class="mt-5 grid items-end gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(320px,0.6fr)]">
+          <h1 class="max-w-[900px] text-[clamp(58px,8.2vw,122px)] font-bold leading-[0.86] tracking-[-0.075em]">
+            Tell us what needs to move.
+          </h1>
+          <p class="max-w-[500px] text-[18px] font-medium leading-[1.5] text-ink/65 lg:pb-2 lg:text-[21px]">
+            Share what you are trying to improve, build, or untangle. We will start with the business need and map the strongest next step.
+          </p>
+        </div>
+      </section>
+
+      <section class="mx-auto mt-16 grid max-w-[1328px] overflow-hidden rounded-[28px] border border-ink/14 lg:mt-24 lg:min-h-[720px] lg:grid-cols-[0.94fr_1.06fr]">
+        <div class="contact-blueprint relative overflow-hidden bg-[#061a42] p-8 text-white sm:p-12 lg:p-14">
+          <div class="relative z-10 flex h-full min-h-[520px] flex-col">
+            <div class="flex items-center justify-between gap-5">
+              <p class="text-[11px] font-bold uppercase tracking-[0.18em] text-white/62">Start with the business</p>
+              <span class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-white/62">
+                <span class="contact-live-dot size-2 rounded-full bg-[#68a0ff]"></span>
+                We listen first
+              </span>
+            </div>
+
+            <div class="relative my-auto py-12">
+              <svg viewBox="0 0 560 300" class="h-auto w-full" aria-hidden="true">
+                <path class="contact-route contact-route--muted" d="M18 54 H176 L236 112 H542"></path>
+                <path class="contact-route contact-route--muted" d="M18 246 H176 L236 188 H542"></path>
+                <path class="contact-route contact-route--active" d="M18 150 H542"></path>
+                <circle class="contact-route-dot contact-route-dot--one" cx="176" cy="54" r="6"></circle>
+                <circle class="contact-route-dot contact-route-dot--two" cx="236" cy="150" r="7"></circle>
+                <circle class="contact-route-dot contact-route-dot--three" cx="430" cy="150" r="6"></circle>
+                <rect x="217" y="112" width="126" height="76" rx="10" fill="#ffffff"></rect>
+                <text x="280" y="144" text-anchor="middle" fill="#061a42" font-size="11" font-weight="700" letter-spacing="1.5">THE RIGHT</text>
+                <text x="280" y="166" text-anchor="middle" fill="#061a42" font-size="20" font-weight="700">NEXT MOVE</text>
+              </svg>
+            </div>
+
+            <div>
+              <p class="max-w-[500px] text-[32px] font-bold leading-[1.02] tracking-[-0.045em] sm:text-[42px]">
+                Bring us the situation, not a finished brief.
+              </p>
+              <ul class="mt-7 grid gap-3 text-[14px] font-semibold text-white/72 sm:grid-cols-3">
+                {contactPrompts.map((prompt) => <li class="border-t border-white/22 pt-3 leading-[1.35]">{prompt}</li>)}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white p-8 sm:p-12 lg:p-14">
+          <div class="flex h-full flex-col">
+            <div>
+              <p class="text-[12px] font-bold uppercase tracking-[0.18em] text-brand-700">Your message</p>
+              <h2 class="mt-4 max-w-[560px] text-[40px] font-bold leading-[0.96] tracking-[-0.055em] sm:text-[54px]">
+                What are you trying to make possible?
+              </h2>
+            </div>
+
+            <div data-contact-success hidden class="mt-12 scroll-mt-32 flex flex-1 flex-col justify-center gap-6" role="status" tabindex="-1">
+              <p class="max-w-[480px] text-[28px] font-bold leading-[1.1] tracking-[-0.04em]">
+                Message sent. We will get back to you soon.
+              </p>
+              <button
+                type="button"
+                data-contact-reset
+                class="inline-flex min-h-14 w-fit cursor-pointer items-center justify-center rounded-[19px] bg-ink px-9 text-[17px] font-semibold text-white transition-transform hover:scale-[1.02] active:scale-[0.98]"
+              >
+                Send another message
+              </button>
+            </div>
+
+            <!--
+              Netlify Forms: this form is in the built HTML, so Netlify detects it at
+              deploy time (form detection must be enabled once in the Netlify UI).
+              Without JS it posts normally and lands on /contact/thanks/; with JS,
+              src/scripts/contact-form.ts submits via fetch and shows the inline message.
+            -->
+            <form
+              name="contact"
+              method="POST"
+              action="/contact/thanks/"
+              data-netlify="true"
+              netlify-honeypot="bot-field"
+              data-contact-form
+              class="mt-12 grid flex-1 content-start gap-x-7 sm:grid-cols-2"
+            >
+              <input type="hidden" name="subject" value="OpenRangeDevs enquiry" />
+              <p class="hidden" aria-hidden="true">
+                <label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+              </p>
+
+              <label class="contact-field">
+                <span>Name</span>
+                <input type="text" name="name" autocomplete="name" required />
+              </label>
+              <label class="contact-field">
+                <span>Email</span>
+                <input type="email" name="email" autocomplete="email" required />
+              </label>
+              <label class="contact-field sm:col-span-2">
+                <span>Company Name</span>
+                <input type="text" name="company" autocomplete="organization" required />
+              </label>
+              <label class="contact-field sm:col-span-2">
+                <span>Message</span>
+                <textarea name="message" rows="5" required></textarea>
+              </label>
+
+              <p data-contact-error hidden class="mt-4 text-[14px] font-semibold text-red-600 sm:col-span-2" role="alert"></p>
+
+              <div class="mt-9 flex flex-col gap-5 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
+                <button
+                  type="submit"
+                  class="inline-flex min-h-14 cursor-pointer items-center justify-center rounded-[19px] bg-ink px-9 text-[17px] font-semibold text-white transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:cursor-wait disabled:opacity-60"
+                >
+                  Submit
+                </button>
+                <a href={`mailto:${SITE.email}`} class="text-[14px] font-semibold text-ink/55 transition-colors hover:text-brand-700">
+                  {SITE.email}
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+    <Footer />
+  </div>
+  <script>
+    import '../../scripts/contact-form.ts'
+  </script>
+</BaseLayout>

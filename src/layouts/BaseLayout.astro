@@ -1,0 +1,93 @@
+---
+import '../styles/global.css'
+import { SITE } from '../data/site'
+
+type Props = {
+  /** Page title. Omit on the home page to use the site title as-is. */
+  title?: string
+  description?: string
+  /** Absolute or root-relative image for social previews. */
+  image?: string
+  type?: 'website' | 'article'
+  /** Built but kept out of search results (unpublished pages, form thank-you). */
+  noindex?: boolean
+  /** JSON-LD objects for this page, merged with the site-wide Organization. */
+  schema?: Record<string, unknown>[]
+  bodyClass?: string
+}
+
+const {
+  title,
+  description = SITE.description,
+  image = SITE.ogImage,
+  type = 'website',
+  noindex = false,
+  schema = [],
+  bodyClass = '',
+} = Astro.props
+
+const fullTitle = title ? `${title} | ${SITE.name}` : SITE.title
+const canonical = new URL(Astro.url.pathname, SITE.url).href
+const imageUrl = new URL(image, SITE.url).href
+
+const organization = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${SITE.url}/#organization`,
+  name: SITE.name,
+  url: SITE.url,
+  logo: `${SITE.url}/assets/logo-mark.svg`,
+  email: SITE.email,
+  telephone: SITE.phone,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: SITE.address.street,
+    addressLocality: SITE.address.locality,
+    addressRegion: SITE.address.region,
+    postalCode: SITE.address.postalCode,
+    addressCountry: SITE.address.country,
+  },
+}
+const jsonLd = [organization, ...schema]
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script is:inline>document.documentElement.classList.add('js')</script>
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    {noindex ? <meta name="robots" content="noindex, follow" /> : <link rel="canonical" href={canonical} />}
+
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_CA" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+
+    <link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <slot name="head" />
+  </head>
+  <body class={bodyClass}>
+    <slot />
+    <script>
+      import '../scripts/site.ts'
+    </script>
+  </body>
+</html>

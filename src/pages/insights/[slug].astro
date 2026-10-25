@@ -1,0 +1,58 @@
+---
+// Problem-aware articles. Drop a Markdown file in src/content/insights/ with
+// title, description, date and `published: true` to publish /insights/<file>/.
+import { getCollection, render } from 'astro:content'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import Navbar from '../../components/Navbar'
+import Footer from '../../components/Footer'
+import PillButton from '../../components/PillButton'
+import { CALENDAR_URL, SITE } from '../../data/site'
+
+export async function getStaticPaths() {
+  const posts = await getCollection('insights')
+  return posts.map((entry) => ({ params: { slug: entry.id }, props: { entry } }))
+}
+
+const { entry } = Astro.props
+const post = entry.data
+const { Content } = await render(entry)
+const url = new URL(`/insights/${entry.id}/`, SITE.url).href
+const dateFmt = new Intl.DateTimeFormat('en-CA', { dateStyle: 'long' })
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.description,
+    datePublished: post.date.toISOString(),
+    dateModified: (post.updated ?? post.date).toISOString(),
+    url,
+    author: { '@id': `${SITE.url}/#organization` },
+    publisher: { '@id': `${SITE.url}/#organization` },
+  },
+]
+---
+
+<BaseLayout title={post.title} description={post.description} type="article" noindex={!post.published} schema={schema}>
+  <div class="page-rails relative min-h-screen overflow-x-clip bg-white">
+    <Navbar elevated />
+    <main class="relative z-10 px-6 pb-28 pt-40 lg:px-14 lg:pt-52">
+      <article class="mx-auto max-w-[760px]">
+        <p class="text-[12px] font-bold uppercase tracking-[0.18em] text-brand-700">Insights</p>
+        <h1 class="mt-5 text-[clamp(44px,6vw,76px)] font-bold leading-[0.92] tracking-[-0.055em]">{post.title}</h1>
+        <p class="mt-6 text-[14px] font-semibold text-ink/50">
+          <time datetime={post.date.toISOString()}>{dateFmt.format(post.date)}</time>
+        </p>
+        <div class="prose-ord mt-12">
+          <Content />
+        </div>
+        <div class="mt-16 flex flex-col items-start gap-6 rounded-[24px] border border-ink/14 p-8 sm:p-10">
+          <p class="text-[28px] font-bold leading-[1.05] tracking-[-0.04em]">Facing this in your operation?</p>
+          <PillButton href={CALENDAR_URL}>Book a call</PillButton>
+        </div>
+      </article>
+    </main>
+    <Footer />
+  </div>
+</BaseLayout>
